@@ -122,7 +122,7 @@ Flask орнатыңыз
 
 Белсендірілген ортада Flask орнату үшін келесі пәрменді пайдаланыңыз:
 
-:: code-block:: sh
+.. code-block:: sh
 
     $ pip install Flask
 
