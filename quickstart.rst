@@ -1,14 +1,14 @@
-Quickstart
+Жылдам іске кіру
 ==========
 
-Eager to get started? This page gives a good introduction to Flask.
-Follow :doc:`installation` to set up a project and install Flask first.
+Жұмысқа кірісуді күте алмайсыз ба? Бұл бет Flask туралы жақсы түсінік береді.
+Жобаны орнату және алдымен Flask орнату үшін :doc: `installation` тармағын орындаңыз.
 
 
-A Minimal Application
+Минималды қолдану
 ---------------------
 
-A minimal Flask application looks something like this:
+Минималды Flask қосымшасы келесідей көрінеді:
 
 .. code-block:: python
 
@@ -20,28 +20,17 @@ A minimal Flask application looks something like this:
     def hello_world():
         return "<p>Hello, World!</p>"
 
-So what did that code do?
+Сонымен, Бұл код не істеді?
 
-1.  First we imported the :class:`~flask.Flask` class. An instance of
-    this class will be our WSGI application.
-2.  Next we create an instance of this class. The first argument is the
-    name of the application's module or package. ``__name__`` is a
-    convenient shortcut for this that is appropriate for most cases.
-    This is needed so that Flask knows where to look for resources such
-    as templates and static files.
-3.  We then use the :meth:`~flask.Flask.route` decorator to tell Flask
-    what URL should trigger our function.
-4.  The function returns the message we want to display in the user's
-    browser. The default content type is HTML, so HTML in the string
-    will be rendered by the browser.
+1. Алдымен біз импорттадық: :class:`~flask.Flask` классты. Бұл класстың данасы біздің wsgi қосымшасы болады.
+2. Әрі қарай, біз осы класстың данасын жасаймыз. Бірінші аргумент-модульдің немесе қолданба бумасының атауы. ``__name__`` - бұл көптеген жағдайларға сәйкес келетін ыңғайлы төте жол. Бұл Flask шаблондар мен статикалық файлдар сияқты ресурстарды қайдан іздеу керектігін білуі үшін қажет.
+3. Содан кейін біз  :meth:`~flask.Flask.route`  деген декоратор қолданамыз. Бұл Flask-ке біздің функцияны қандай URL іске қосуы керектігін айтады.
+4. Функция пайдаланушының шолғышында көрсеткіміз келетін хабарды қайтарады. Әдепкі мазмұн түрі-HTML, сондықтан жолдағы HTML браузерде көрсетіледі.
 
-Save it as :file:`hello.py` or something similar. Make sure to not call
-your application :file:`flask.py` because this would conflict with Flask
-itself.
+Оны :file:`hello.py` - немесе ұқсас атаулармен сақтаңыз. Қолданбаны :file:`flask.py` - атымен сақтамауын назар аударыңыз, өйткені бұл Flask-тің өзіне атаулар қақтығысы боп келеді.
 
-To run the application, use the ``flask`` command or
-``python -m flask``. You need to tell the Flask where your application
-is with the ``--app`` option.
+Қолданбаны іске қосу үшін ``flask``пәрменін немесе ``python -m flask`` қолданыңыз.
+``--app`` опциясын пайдаланып, flask-ке қолданбаңыздың қай жерде екенін айту керек.
 
 .. code-block:: text
 
@@ -49,22 +38,16 @@ is with the ``--app`` option.
      * Serving Flask app 'hello'
      * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
 
-.. admonition:: Application Discovery Behavior
+.. admonition:: Қолданбаны анықтау әрекеті
 
-    As a shortcut, if the file is named ``app.py`` or ``wsgi.py``, you
-    don't have to use ``--app``. See :doc:`/cli` for more details.
+    Егер файл ``app.py`` немесе ``wsgi.py``  аталған болса,  сізге ``--app`` қолданудың қажеті жоқ. 
+    Қосымша ақпарат алу үшін :doc:`/cli` қараңыз.
 
-This launches a very simple builtin server, which is good enough for
-testing but probably not what you want to use in production. For
-deployment options see :doc:`deploying/index`.
+Бұл өте қарапайым кіріктірілген серверді іске қосады, ол тестілеуге жеткілікті, бірақ сіз өндірісте қолданғыңыз келмейтін шығар. Орналастыру параметрлері келесі бөлімде берілген :doc:`deploying/index`.
 
-Now head over to http://127.0.0.1:5000/, and you should see your hello
-world greeting.
+Енді http://127.0.0.1:5000 / адреске барып сіз hello world сәлемдесуін көруіңіз керек.
 
-If another program is already using port 5000, you'll see
-``OSError: [Errno 98]`` or ``OSError: [WinError 10013]`` when the
-server tries to start. See :ref:`address-already-in-use` for how to
-handle that.
+Егер басқа бағдарлама 5000 портын қолданып жатса, сіз серверді іске қосқан кезде ``OSError: [WinError 10013]`` немесе ``OSError: [Errno 98]`` көресіз. :ref:`address-already-in-use` көріп, онымен қалай күресуге болады.
 
 .. _public-server:
 
