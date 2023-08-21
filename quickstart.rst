@@ -51,29 +51,20 @@
 
 .. _public-server:
 
-.. admonition:: Externally Visible Server
+.. admonition:: Сырттан көрінетін Сервер
 
-   If you run the server you will notice that the server is only accessible
-   from your own computer, not from any other in the network.  This is the
-   default because in debugging mode a user of the application can execute
-   arbitrary Python code on your computer.
+  Егер сіз серверді іске қоссаңыз, серверге желідегі кез келген басқа компьютерден емес, тек өз компьютеріңізден кіруге болатынын байқайсыз.  Бұл әдепкі болып табылады, өйткені күйін келтіру режимінде қолданба пайдаланушысы компьютерде ерікті Python кодын орындай алады.
 
-   If you have the debugger disabled or trust the users on your network,
-   you can make the server publicly available simply by adding
-   ``--host=0.0.0.0`` to the command line::
+   Егер сізде отладчик өшірілген болса немесе желі пайдаланушыларына сенсеңіз, пәрмен жолына  ``--host=0.0.0.0`` қосу арқылы серверді жалпыға қол жетімді ете аласыз::
 
        $ flask run --host=0.0.0.0
 
-   This tells your operating system to listen on all public IPs.
+  Бұл сіздің операциялық жүйеңізге барлық жалпыға ортақ IP мекенжайларын тыңдауды көрсетеді.
 
-
-Debug Mode
+Жөндеу режимі
 ----------
 
-The ``flask run`` command can do more than just start the development
-server. By enabling debug mode, the server will automatically reload if
-code changes, and will show an interactive debugger in the browser if an
-error occurs during a request.
+ ``flask run``  командасы әзірлеу серверін іске қосудан гөрі көп нәрсе істей алады. Күйін келтіру режимін қосу арқылы код өзгерген кезде сервер автоматты түрде қайта жүктеледі және сұрау кезінде қате пайда болса, шолғышта интерактивті күйін келтірушіні көрсетеді.
 
 .. image:: _static/debugger.png
     :align: center
@@ -82,12 +73,9 @@ error occurs during a request.
 
 .. warning::
 
-    The debugger allows executing arbitrary Python code from the
-    browser. It is protected by a pin, but still represents a major
-    security risk. Do not run the development server or debugger in a
-    production environment.
+   Отладчик браузерден Python - да ерікті кодты орындауға мүмкіндік береді. Ол pin кодымен қорғалған, бірақ бәрібір қауіпсіздікке үлкен қауіп төндіреді. Өндірістік ортада әзірлеу серверін немесе отладчикті іске қоспаңыз.
 
-To enable debug mode, use the ``--debug`` option.
+Жөндеу режимін қосу үшін ``--debug`` опциясын пайдаланыңыз.
 
 .. code-block:: text
 
@@ -99,26 +87,20 @@ To enable debug mode, use the ``--debug`` option.
      * Debugger is active!
      * Debugger PIN: nnn-nnn-nnn
 
-See also:
+Мұны да қараңыз:
 
--   :doc:`/server` and :doc:`/cli` for information about running in debug mode.
--   :doc:`/debugging` for information about using the built-in debugger
-    and other debuggers.
--   :doc:`/logging` and :doc:`/errorhandling` to log errors and display
-    nice error pages.
+-   :doc:`/server` and :doc:`/cli` күйін келтіру режимінде іске қосу туралы ақпарат алу үшін.
+-   :doc:`/debugging`  кірістірілген отладчикті және басқа отладчиктерді пайдалану туралы ақпарат алу үшін.
+-   :doc:`/logging` and :doc:`/error handling`  қателерді тіркеу және әдемі қате беттерін көрсету үшін.
 
 
-HTML Escaping
+HTML-ден шығу
 -------------
 
-When returning HTML (the default response type in Flask), any
-user-provided values rendered in the output must be escaped to protect
-from injection attacks. HTML templates rendered with Jinja, introduced
-later, will do this automatically.
+HTML (Flask-те әдепкі жауап түрі) қайтарылған кезде, инъекциялық шабуылдардан қорғау үшін пайдаланушының шығыс деректерінде көрсетілген кез келген мәндері қорғалған болуы керек. Кейінірек ұсынылған Jinja көмегімен көрсетілген HTML шаблондары мұны автоматты түрде жасайды.
 
-:func:`~markupsafe.escape`, shown here, can be used manually. It is
-omitted in most examples for brevity, but you should always be aware of
-how you're using untrusted data.
+Мұнда көрсетілген   :func:`~markupsafe.escape`  қолмен пайдалануға болады.
+Көптеген мысалдарда бұл қысқаша қабылданбайды, бірақ сіз әрқашан сенімсіз деректерді қалай пайдаланатыныңызды білуіңіз керек.
 
 .. code-block:: python
 
@@ -128,24 +110,18 @@ how you're using untrusted data.
     def hello(name):
         return f"Hello, {escape(name)}!"
 
-If a user managed to submit the name ``<script>alert("bad")</script>``,
-escaping causes it to be rendered as text, rather than running the
-script in the user's browser.
+Егер пайдаланушы ``<script>alert("bad")</script>`` атауын жібере алса, экрандау сценарийді пайдаланушының шолғышында іске қосудың орнына оны мәтін ретінде көрсетуге әкеледі.
 
-``<name>`` in the route captures a value from the URL and passes it to
-the view function. These variable rules are explained below.
+маршруттағы ``<name>`` URL мекенжайынан мәнді алады және оны қарау функциясына жібереді. Бұл айнымалы ережелер төменде түсіндіріледі.
 
-
-Routing
+Маршруттау
 -------
 
-Modern web applications use meaningful URLs to help users. Users are more
-likely to like a page and come back if the page uses a meaningful URL they can
-remember and use to directly visit a page.
+Заманауи веб-қосымшалар пайдаланушыларға көмектесу үшін мағыналы URL мекенжайларын пайдаланады. Пайдаланушылар бетті ұнатуы ықтимал және егер олар бетте есте сақтай алатын және бетке тікелей кіру үшін пайдалана алатын мағыналы URL мекенжайын пайдаланса, олар қайтып оралады.
 
-Use the :meth:`~flask.Flask.route` decorator to bind a function to a URL. ::
+функцияны URL мекенжайына байланыстыру үшін :meth:`~flask.Flask.route`  декораторды пайдаланыңыз. ::
 
-    @app.route('/')
+@app.route('/')
     def index():
         return 'Index Page'
 
@@ -153,49 +129,45 @@ Use the :meth:`~flask.Flask.route` decorator to bind a function to a URL. ::
     def hello():
         return 'Hello, World'
 
-You can do more! You can make parts of the URL dynamic and attach multiple
-rules to a function.
+Сіз көп нәрсені жасай аласыз! Сіз URL бөліктерін динамикалық етіп жасай аласыз және функцияға бірнеше ережелерді қоса аласыз.
 
-Variable Rules
+Айнымалы ережелер
 ``````````````
 
-You can add variable sections to a URL by marking sections with
-``<variable_name>``. Your function then receives the ``<variable_name>``
-as a keyword argument. Optionally, you can use a converter to specify the type
-of the argument like ``<converter:variable_name>``. ::
+URL мекенжайына айнымалы бөлімдерді ``<variable_name>`` бөлімдерін белгілеу арқылы қосуға болады. Содан кейін сіздің функцияңыз кілт сөз аргументі ретінде ``<variable_name>``  алады. Қажет болса, дәлел түрін көрсету үшін түрлендіргішті пайдалануға болады, мысалы ``<converter:variable_name>``. ::
 
     from markupsafe import escape
 
     @app.route('/user/<username>')
     def show_user_profile(username):
-        # show the user profile for that user
+        # сол пайдаланушы үшін пайдаланушы профилін көрсету
         return f'User {escape(username)}'
 
     @app.route('/post/<int:post_id>')
     def show_post(post_id):
-        # show the post with the given id, the id is an integer
+        # берілген идентификатормен хабарламаны көрсету, идентификатор бүтін сан болып табылады
         return f'Post {post_id}'
 
     @app.route('/path/<path:subpath>')
     def show_subpath(subpath):
-        # show the subpath after /path/
+        # /path/ кейін ішкі жолды көрсету
         return f'Subpath {escape(subpath)}'
 
-Converter types:
+Түрлендіргіштердің түрлері:
 
 ========== ==========================================
-``string`` (default) accepts any text without a slash
-``int``    accepts positive integers
-``float``  accepts positive floating point values
-``path``   like ``string`` but also accepts slashes
-``uuid``   accepts UUID strings
+``string``  (default) кез-келген мәтінді қиғаш сызықсыз қабылдайды
+``int``     бүтін оң сандарды қабылдайды
+``float``   оң өзгермелі нүкте мәндерін қабылдайды
+``float``   ``string`` ұқсас бірақ сонымен бірге қиғаш сызықтарды қабылдайды
+``uuid``    UUID жолдарын қабылдайды
 ========== ==========================================
 
 
-Unique URLs / Redirection Behavior
+Бірегей URL мекенжайлары / Қайта бағыттау әрекеті
 ``````````````````````````````````
 
-The following two rules differ in their use of a trailing slash. ::
+Келесі екі ереже соңғы қиғаш сызықты қолданумен ерекшеленеді. ::
 
     @app.route('/projects/')
     def projects():
@@ -205,45 +177,27 @@ The following two rules differ in their use of a trailing slash. ::
     def about():
         return 'The about page'
 
-The canonical URL for the ``projects`` endpoint has a trailing slash.
-It's similar to a folder in a file system. If you access the URL without
-a trailing slash (``/projects``), Flask redirects you to the canonical URL
-with the trailing slash (``/projects/``).
+``projects`` соңғы нүктесінің канондық URL мекенжайының соңында қиғаш сызық бар. Бұл файлдық жүйедегі қалта сияқты. Егер сіз соңында қиғаш сызығы жоқ URL мекенжайына жүгінсеңіз (``/projects``), Flask сізді соңында қиғаш сызығы бар канондық URL мекенжайына бағыттайды (``/projects``).
 
-The canonical URL for the ``about`` endpoint does not have a trailing
-slash. It's similar to the pathname of a file. Accessing the URL with a
-trailing slash (``/about/``) produces a 404 "Not Found" error. This helps
-keep URLs unique for these resources, which helps search engines avoid
-indexing the same page twice.
+ ``about`` соңғы нүктесінің канондық URL мекенжайында соңғы қиғаш сызық жоқ. Бұл файл жолына ұқсас. Соңында қиғаш сызығы бар URL мекенжайына кіру(``/about/``) 404 "Not Found" қатесіне әкеледі. Бұл поискl мекенжайларын осы ресурстарға ғана тән етіп сақтауға көмектеседі, бұл іздеу жүйелеріне бір бетті екі рет индекстеуден аулақ болуға көмектеседі.
 
 
 .. _url-building:
 
-URL Building
+URL мекенжайын жасау
 ````````````
 
-To build a URL to a specific function, use the :func:`~flask.url_for` function.
-It accepts the name of the function as its first argument and any number of
-keyword arguments, each corresponding to a variable part of the URL rule.
-Unknown variable parts are appended to the URL as query parameters.
+Белгілі бір функция үшін URL жасау үшін :func:`~flask.url_for` функциясын қолданыңыз. Ол функцияның атауын өзінің алғашқы аргументі ретінде және әрқайсысы URL ережесінің айнымалы бөлігіне сәйкес келетін кілт сөз аргументтерінің кез келген санын қабылдайды. Айнымалылардың белгісіз бөліктері URL мекенжайына сұрау параметрлері ретінде қосылады.
 
-Why would you want to build URLs using the URL reversing function
-:func:`~flask.url_for` instead of hard-coding them into your templates?
+Неліктен URL мекенжайын  өз үлгілерінде қатаң кодтаудың орнына :func:`~flask.url_for` өзгерту функциясын пайдаланып URL мекенжайларын жасағыңыз келедi?
 
-1. Reversing is often more descriptive than hard-coding the URLs.
-2. You can change your URLs in one go instead of needing to remember to
-   manually change hard-coded URLs.
-3. URL building handles escaping of special characters transparently.
-4. The generated paths are always absolute, avoiding unexpected behavior
-   of relative paths in browsers.
-5. If your application is placed outside the URL root, for example, in
-   ``/myapplication`` instead of ``/``, :func:`~flask.url_for` properly
-   handles that for you.
+1. Реверсия көбінесе URL мекенжайларын қатаң кодтауға қарағанда айқынырақ болады.
+2. Қатты бағдарламаланған URL мекенжайларын қолмен өзгерту қажеттілігін есте сақтаудың орнына URL мекенжайларын бір уақытта өзгертуге болады.
+3. URL мекенжайын құру арнайы таңбаларды қорғауды мөлдір түрде өңдейді.
+4. Жасалған жолдар әрқашан абсолютті болып табылады, бұл браузерлердегі салыстырмалы жолдардың күтпеген әрекетін болдырмайды.
+5. Егер сіздің қосымшаңыз URL мекен-жайының түбірлік каталогынан тыс орналастырылған болса, мысалы, ``/``/my application`` орнына ``/``,  :func:`~flask.url_for` мұны сіз үшін дұрыс өңдейді.
 
-For example, here we use the :meth:`~flask.Flask.test_request_context` method
-to try out :func:`~flask.url_for`. :meth:`~flask.Flask.test_request_context`
-tells Flask to behave as though it's handling a request even while we use a
-Python shell. See :ref:`context-locals`.
+Мысалы, мұнда біз :meth:`~flask.Flask.test_request_context` әдісін қолданып көреміз :func:`~flask.url_for`. :meth:`~flask.Flask.test_request_context. Flask-ке Python қабығын қолданған кезде де сұрауды өңдейтін сияқты әрекет етуді айтады. Қараңыз :ref:`context-locals`.
 
 .. code-block:: python
 
@@ -275,13 +229,10 @@ Python shell. See :ref:`context-locals`.
     /user/John%20Doe
 
 
-HTTP Methods
+HTTP әдістері
 ````````````
 
-Web applications use different HTTP methods when accessing URLs. You should
-familiarize yourself with the HTTP methods as you work with Flask. By default,
-a route only answers to ``GET`` requests. You can use the ``methods`` argument
-of the :meth:`~flask.Flask.route` decorator to handle different HTTP methods.
+Веб-қосымшалар URL мекенжайларына кірген кезде әртүрлі HTTP әдістерін қолданады. Flask-пен жұмыс істеу кезінде HTTP әдістерімен танысу керек. Әдепкі бойынша, маршрут тек``GET`` сұрауларына жауап береді. Сіз  әр түрлі HTTP әдістерін өңдеуге арналған маршрут :meth:`~flask.Flask.route` Декоратортын ``methods`` аргументін пайдалана аласыз.
 ::
 
     from flask import request
@@ -293,13 +244,9 @@ of the :meth:`~flask.Flask.route` decorator to handle different HTTP methods.
         else:
             return show_the_login_form()
 
-The example above keeps all methods for the route within one function,
-which can be useful if each part uses some common data.
+Жоғарыдағы мысалда маршруттың барлық әдістері бір функцияда сақталады, бұл әрбір бөлік кейбір жалпы деректерді пайдаланса пайдалы болуы мүмкін.
 
-You can also separate views for different methods into different
-functions. Flask provides a shortcut for decorating such routes with
-:meth:`~flask.Flask.get`, :meth:`~flask.Flask.post`, etc. for each
-common HTTP method.
+Сондай-ақ, әртүрлі әдістерге арналған көріністерді әртүрлі функцияларға бөлуге болады. Flask келесі маршруттарды жобалау үшін төте жолды ұсынады:  :meth:`~flask.Flask.get` ,   :meth:`~flask.Flask.get` және т. б. әрбір жалпы HTTP әдісі үшін.
 
 .. code-block:: python
 
@@ -311,26 +258,20 @@ common HTTP method.
     def login_post():
         return do_the_login()
 
-If ``GET`` is present, Flask automatically adds support for the ``HEAD`` method
-and handles ``HEAD`` requests according to the `HTTP RFC`_. Likewise,
-``OPTIONS`` is automatically implemented for you.
+Егер ``GET`` болса, Flask автоматты түрде  ``HEAD`` әдісін қолдайды және   `HTTP RFC`_ сәйкес  ``HEAD`` сұрауларын өңдейді. Сол сияқты,  ``OPTIONS`` сіз үшін автоматты түрде жүзеге асырылады.
 
 .. _HTTP RFC: https://www.ietf.org/rfc/rfc2068.txt
 
-Static Files
+Статикалық файлдар
 ------------
 
-Dynamic web applications also need static files.  That's usually where
-the CSS and JavaScript files are coming from.  Ideally your web server is
-configured to serve them for you, but during development Flask can do that
-as well.  Just create a folder called :file:`static` in your package or next to
-your module and it will be available at ``/static`` on the application.
+Динамикалық веб-қосымшаларға статикалық файлдар қажет. Әдетте CSS және JavaScript файлдары сол жерден алынады. Ең дұрысы, сіздің веб-серверіңіз сізге қызмет ету үшін конфигурацияланған, бірақ оны әзірлеу кезінде Flask жасай алады. Тек қалтаны жасаңыз :file:`static`пакетте немесе модульдің жанында`static` және ол қолданбадағы ``/static`` мекенжайында қол жетімді болады.
 
-To generate URLs for static files, use the special ``'static'`` endpoint name::
+Статикалық файлдар үшін URL мекенжайларын жасау үшін арнайы ``'static'`` соңғы нүкте атауын пайдаланыңыз::
 
     url_for('static', filename='style.css')
 
-The file has to be stored on the filesystem as :file:`static/style.css`.
+Файл файлдық жүйеде келесідей сақталуы керек: :file:`static/style.css`.
 
 Rendering Templates
 -------------------
