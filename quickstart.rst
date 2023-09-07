@@ -273,26 +273,18 @@ HTTP әдістері
 
 Файл файлдық жүйеде келесідей сақталуы керек: :file:`static/style.css`.
 
-Rendering Templates
+Көрсету үлгілері
 -------------------
 
-Generating HTML from within Python is not fun, and actually pretty
-cumbersome because you have to do the HTML escaping on your own to keep
-the application secure.  Because of that Flask configures the `Jinja2
-<https://palletsprojects.com/p/jinja/>`_ template engine for you automatically.
+Python-дан HTML жасау қызық емес және іс жүзінде өте қиын, өйткені қолданбаның қауіпсіздігін қамтамасыз ету үшін HTML-ді өзіңіз қорғауыңыз керек. Сол үшін Flask  -  `Jinja2 <https://pallets projects.com/p/jinja/>` -  шаблон қозғалтқышы автоматты түрде орнатады
 
-Templates can be used to generate any type of text file. For web applications, you'll
-primarily be generating HTML pages, but you can also generate markdown, plain text for
-emails, and anything else.
+Үлгілерді кез келген түрдегі мәтіндік файл жасау үшін пайдалануға болады. Веб-қосымшалар үшін Сіз бірінші кезекте HTML беттерін жасайсыз, бірақ сіз markdown, электрондық пошталарға арналған қарапайым мәтін және басқаларын жасай аласыз.
 
-For a reference to HTML, CSS, and other web APIs, use the `MDN Web Docs`_.
+HTML, CSS және басқа веб-API-ге сілтеме жасау үшін 'MDN Web Docs'_.
 
 .. _MDN Web Docs: https://developer.mozilla.org/
 
-To render a template you can use the :func:`~flask.render_template`
-method.  All you have to do is provide the name of the template and the
-variables you want to pass to the template engine as keyword arguments.
-Here's a simple example of how to render a template::
+Үлгіні көрсету үшін :func:`~flask.render_template` әдісті қолдануға болады . Сізге тек шаблон атауын және шаблон қозғалтқышына кілт сөз аргументтері ретінде бергіңіз келетін айнымалыларды көрсету керек. Міне, үлгіні қалай салу керектігінің қарапайым мысалы::
 
     from flask import render_template
 
@@ -301,28 +293,24 @@ Here's a simple example of how to render a template::
     def hello(name=None):
         return render_template('hello.html', name=name)
 
-Flask will look for templates in the :file:`templates` folder.  So if your
-application is a module, this folder is next to that module, if it's a
-package it's actually inside your package:
+Flask үлгілерді :file:`templates ' қалтасынан іздейді. Сонымен, егер сіздің қосымшаңыз модуль болса, онда бұл қалта сол модульдің қасында, егер ол пакет болса, онда ол сіздің пакетіңіздің ішінде болады:
 
-**Case 1**: a module::
+**Кейс 1**: a module::
 
     /application.py
     /templates
         /hello.html
 
-**Case 2**: a package::
+**Кейс 2**: a package::
 
     /application
         /__init__.py
         /templates
             /hello.html
 
-For templates you can use the full power of Jinja2 templates.  Head over
-to the official `Jinja2 Template Documentation
-<https://jinja.palletsprojects.com/templates/>`_ for more information.
+Шаблондар жасау үшін Сіз Jinja2 шаблондарының барлық күшін пайдалана аласыз. Jinja2 үлгісі бойынша ресми құжаттаманы <https://jinja.palletsprojects.com/templates / > ' _  қосымша ақпарат алу үшін.
 
-Here is an example template:
+Міне мысал үлгісі:
 
 .. sourcecode:: html+jinja
 
@@ -334,23 +322,13 @@ Here is an example template:
       <h1>Hello, World!</h1>
     {% endif %}
 
-Inside templates you also have access to the :data:`~flask.Flask.config`,
-:class:`~flask.request`, :class:`~flask.session` and :class:`~flask.g` [#]_ objects
-as well as the :func:`~flask.url_for` and :func:`~flask.get_flashed_messages` functions.
+Үлгілердің ішінде сізге :data:`~flask.Flask.config`, :class:`~flask.request`, :class:`~flask.session` және :class:`~flask.g` [#]_ қол жетімді нысандар , сондай-ақ пен мүмкіндіктер:  :func:`~flask.url_for` және :func:`~flask.get_flashed_messages`
 
-Templates are especially useful if inheritance is used.  If you want to
-know how that works, see :doc:`patterns/templateinheritance`. Basically
-template inheritance makes it possible to keep certain elements on each
-page (like header, navigation and footer).
+Үлгілер, егер мұрагерлік қолданылса, әсіресе пайдалы. Егер сіз оның қалай жұмыс істейтінін білгіңіз келсе, қараңыз :doc:`patterns/template inheritance`. Негізінде, шаблондардың мұрагері әр бетте белгілі бір элементтерді сақтауға мүмкіндік береді (мысалы, үстіңгі деректеме, Навигация және төменгі деректеме).
 
-Automatic escaping is enabled, so if ``name`` contains HTML it will be escaped
-automatically.  If you can trust a variable and you know that it will be
-safe HTML (for example because it came from a module that converts wiki
-markup to HTML) you can mark it as safe by using the
-:class:`~markupsafe.Markup` class or by using the ``|safe`` filter in the
-template.  Head over to the Jinja 2 documentation for more examples.
+Автоматты экрандау қосулы, сондықтан ``name`` HTML болса, ол автоматты түрде қорғалады. Егер сіз айнымалыға сене алсаңыз және оның қауіпсіз HTML болатынын білсеңіз (мысалы, ол Уики белгілеуді HTML-ге түрлендіретін модульден алынғандықтан), оны қауіпсіз деп белгілеуге болады :class:`~markupsafe.Markup`  немесе ``|safe``  сүзгісін қолдану арқылы белгілеу класы. Қосымша мысалдар алу үшін Jinja2 құжаттамасын қараңыз.
 
-Here is a basic introduction to how the :class:`~markupsafe.Markup` class works::
+Міне, қалай жұмыс істейтіні туралы қысқаша кіріспе :class:`~markupsafe.Markup`.Белгілеу класы жұмыс істейді::
 
     >>> from markupsafe import Markup
     >>> Markup('<strong>Hello %s!</strong>') % '<blink>hacker</blink>'
@@ -367,9 +345,7 @@ Here is a basic introduction to how the :class:`~markupsafe.Markup` class works:
    ``.xml``, ``.xhtml``.  Templates loaded from a string will have
    autoescaping disabled.
 
-.. [#] Unsure what that :class:`~flask.g` object is? It's something in which
-   you can store information for your own needs. See the documentation
-   for :class:`flask.g` and :doc:`patterns/sqlite3`.
+.. [#] Бұл нысанның не екенін білмейсіз  :class:`~flask.g`? Бұл ақпаратты өз қажеттіліктеріңіз үшін сақтауға болатын нәрсе. Құжаттаманы қараңыз: сынып:class:`flask.g` and :doc:`patterns/sqlite3`.
 
 
 Accessing Request Data
