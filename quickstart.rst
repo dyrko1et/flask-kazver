@@ -348,14 +348,10 @@ Flask үлгілерді :file:`templates ' қалтасынан іздейді.
 .. [#] Бұл нысанның не екенін білмейсіз  :class:`~flask.g`? Бұл ақпаратты өз қажеттіліктеріңіз үшін сақтауға болатын нәрсе. Құжаттаманы қараңыз: сынып:class:`flask.g` and :doc:`patterns/sqlite3`.
 
 
-Accessing Request Data
+Сұрау деректеріне қол жеткізу
 ----------------------
 
-For web applications it's crucial to react to the data a client sends to
-the server.  In Flask this information is provided by the global
-:class:`~flask.request` object.  If you have some experience with Python
-you might be wondering how that object can be global and how Flask
-manages to still be threadsafe.  The answer is context locals:
+Веб-қосымшалар үшін клиент серверге жіберетін деректерге жауап беру өте маңызды. Flask - те бұл ақпаратты global :class:`~flask.request` нысанмен ұсынылған . Егер сізде Python тәжірибесі болса, Сіз бұл нысанның қалай жаһандық болуы және Flask қалай қауіпсіз қала алады деген сұрақтар туындауы мүмкін. Жауап жергілікті тұрғындардың контекстінде:
 
 
 .. _context-locals:
@@ -365,30 +361,13 @@ Context Locals
 
 .. admonition:: Insider Information
 
-   If you want to understand how that works and how you can implement
-   tests with context locals, read this section, otherwise just skip it.
+  Егер сіз оның қалай жұмыс істейтінін және жергілікті контексттермен тестілерді қалай жүзеге асыруға болатындығын түсінгіңіз келсе, осы бөлімді оқып шығыңыз, әйтпесе оны өткізіп жіберіңіз.
 
-Certain objects in Flask are global objects, but not of the usual kind.
-These objects are actually proxies to objects that are local to a specific
-context.  What a mouthful.  But that is actually quite easy to understand.
+Flask-Тегі кейбір нысандар жаһандық нысандар болып табылады, бірақ әдеттегі түрі емес. Бұл нысандар іс жүзінде белгілі бір контекст үшін жергілікті объектілерге арналған прокси-серверлер болып табылады.  Қандай толық ауыз.  Бірақ оны түсіну өте оңай.
 
-Imagine the context being the handling thread.  A request comes in and the
-web server decides to spawn a new thread (or something else, the
-underlying object is capable of dealing with concurrency systems other
-than threads).  When Flask starts its internal request handling it
-figures out that the current thread is the active context and binds the
-current application and the WSGI environments to that context (thread).
-It does that in an intelligent way so that one application can invoke another
-application without breaking.
+Контекст өңдеу ағыны деп елестетіп көріңіз. Сұраныс келіп веб-сервер Жаңа ағын құруды шешеді (немесе басқа нәрсе, негізгі объект ағындардан басқа параллелизм жүйелерімен жұмыс істей алады). Flash ішкі сұраныстарды өңдеуді іске қосқанда, ол ағымдағы ағынның белсенді контекст екенін анықтайды және ағымдағы қолданба мен wsgi орталарын осы контекстке (ағынға) байланыстырады. Ол бұл түрде жасайды, сол бір қолданба басқа қолданбаны ақаусыз шақыра алады.
 
-So what does this mean to you?  Basically you can completely ignore that
-this is the case unless you are doing something like unit testing.  You
-will notice that code which depends on a request object will suddenly break
-because there is no request object.  The solution is creating a request
-object yourself and binding it to the context.  The easiest solution for
-unit testing is to use the :meth:`~flask.Flask.test_request_context`
-context manager.  In combination with the ``with`` statement it will bind a
-test request so that you can interact with it.  Here is an example::
+Сонымен, бұл сіз үшін нені білдіреді? Негізінде, егер сіз модульдік тестілеу сияқты нәрсені жасамасаңыз, бұл жағдайды мүлдем елемеуге болады. Сұрау нысанына тәуелді код кенеттен үзілетінін екенін байқа-аласыз , себебі сұрау нысаны жоқ. Шешім: сұрау нысанын өздігінен құру және оны контекстке байланыстыру. Модульдік тестілеудің ең оңай шешімі :meth:`~flask.Flask.test_request_context` . ``with`` операторымен бірге ол сынақ сұрауын байланыстырады, осылайша сіз онымен әрекеттесе аласыз. Міне мысал:: 
 
     from flask import request
 
@@ -398,27 +377,21 @@ test request so that you can interact with it.  Here is an example::
         assert request.path == '/hello'
         assert request.method == 'POST'
 
-The other possibility is passing a whole WSGI environment to the
+Тағы бір мүмкіндік бүкіл wsgi ортасын беру
 :meth:`~flask.Flask.request_context` method::
 
     with app.request_context(environ):
         assert request.method == 'POST'
 
-The Request Object
+Сұрау нысаны
 ``````````````````
 
-The request object is documented in the API section and we will not cover
-it here in detail (see :class:`~flask.Request`). Here is a broad overview of
-some of the most common operations.  First of all you have to import it from
-the ``flask`` module::
+Сұрау нысаны API бөлімінде құжатталған және біз оны мұнда егжей-тегжейлі қарастырмаймыз (:class:`~flask.Request`). Міне, кейбір кең таралған операцияларға жалпы шолу. Ең алдымен, оны ``flask`` модулінен импорттау керек::
 
     from flask import request
 
-The current request method is available by using the
-:attr:`~flask.Request.method` attribute.  To access form data (data
-transmitted in a ``POST`` or ``PUT`` request) you can use the
-:attr:`~flask.Request.form` attribute.  Here is a full example of the two
-attributes mentioned above::
+Ағымдағы сұрау әдісі :attr:`~flask.Request.method`. Пішін деректеріне қол жеткізу үшін 
+(``POST``немесе ``PUT``сұрауында берілген деректер)  :attr:`~flask.Request.form` атрибутты пайдалануға болады . Жоғарыда аталған екі атрибуттың толық мысалы::
 
     @app.route('/login', methods=['POST', 'GET'])
     def login():
@@ -433,40 +406,23 @@ attributes mentioned above::
         # was GET or the credentials were invalid
         return render_template('login.html', error=error)
 
-What happens if the key does not exist in the ``form`` attribute?  In that
-case a special :exc:`KeyError` is raised.  You can catch it like a
-standard :exc:`KeyError` but if you don't do that, a HTTP 400 Bad Request
-error page is shown instead.  So for many situations you don't have to
-deal with that problem.
+Егер кілт ``form`` атрибутында болмаса не болады? Бұл жағдайда арнайы :exc:`KeyError`пайда болады. Сіз оны стандартты ретінде ұстай аласыз :exc:`KeyError`, бірақ олай етпесеңіз, оның орнына қате HTTP 400 сұрауының қате беті көрсетіледі. Осылайша, көптеген жағдайларда сіз бұл мәселеге тап болмайсыз.
 
-To access parameters submitted in the URL (``?key=value``) you can use the
-:attr:`~flask.Request.args` attribute::
+URL (``?key=value``)  мекенжайында көрсетілген параметрлерге қол жеткізу үшін, сіз :attr:`~flask.Request.args` attribute:: пайдалана аласыз
 
     searchword = request.args.get('key', '')
 
-We recommend accessing URL parameters with `get` or by catching the
-:exc:`KeyError` because users might change the URL and presenting them a 400
-bad request page in that case is not user friendly.
+Біз URL параметрлеріне `get`  арқылы немесе  :exc:`KeyError` арқылы ұстап алып қол жеткізуді ұсынамыз , өйткені пайдаланушылар URL мекенжайын өзгерте алады, бұл жағдайда оларға 400 қате сұрауы бар бетті ұсыну пайдаланушыға ыңғайлы болмайды.
 
-For a full list of methods and attributes of the request object, head over
-to the :class:`~flask.Request` documentation.
+Request объектісінің әдістері мен атрибуттарының толық тізімін алу үшін  :class:`~flask.Request` құжаттамаға өтіңіз  .
 
 
-File Uploads
+Download files
 ````````````
 
-You can handle uploaded files with Flask easily.  Just make sure not to
-forget to set the ``enctype="multipart/form-data"`` attribute on your HTML
-form, otherwise the browser will not transmit your files at all.
+Жүктелген файлдарды Flask көмегімен оңай өңдеуге болады. HTML формасында  ``enctype="multipart/form-data"`` атрибутын орнатуды ұмытпаңыз, әйтпесе браузер сіздің файлдарыңызды мүлдем жібермейді.
 
-Uploaded files are stored in memory or at a temporary location on the
-filesystem.  You can access those files by looking at the
-:attr:`~flask.request.files` attribute on the request object.  Each
-uploaded file is stored in that dictionary.  It behaves just like a
-standard Python :class:`file` object, but it also has a
-:meth:`~werkzeug.datastructures.FileStorage.save` method that
-allows you to store that file on the filesystem of the server.
-Here is a simple example showing how that works::
+Жүктелген файлдар жадта немесе файлдық жүйенің уақытша орналасуында сақталады. Бұл файлдарға :attr:`~flask.request.files` жерден қарап, сұрау обьектердін атрибутқа кіруге болады . Жүктелген әрбір файл осы сөздікте сақталады.  Ол стандартты Python :class:`file` нысаны сияқты әрекет етеді, бірақ сонымен бірге :meth:`~werkzeug.datastructures.FileStorage.save`.Бұл файлды сервер файлдық жүйесінде сақтауға мүмкіндік беретін әдіс. Міне, оның қалай жұмыс істейтінін көрсететін қарапайым мысал::
 
     from flask import request
 
@@ -477,14 +433,7 @@ Here is a simple example showing how that works::
             f.save('/var/www/uploads/uploaded_file.txt')
         ...
 
-If you want to know how the file was named on the client before it was
-uploaded to your application, you can access the
-:attr:`~werkzeug.datastructures.FileStorage.filename` attribute.
-However please keep in mind that this value can be forged
-so never ever trust that value.  If you want to use the filename
-of the client to store the file on the server, pass it through the
-:func:`~werkzeug.utils.secure_filename` function that
-Werkzeug provides for you::
+Егер сіз файл сіздің қосымшаңызға жүктелмес бұрын клиентте қалай аталғанын білгіңіз келсе, оған қол жеткізе аласыз :attr:`~werkzeug.datastructures.FileStorage.filename`  атрибуты. Дегенмен, бұл мән жалған болуы мүмкін екенін есте сақтаңыз, сондықтан бұл мәнге ешқашан сенбеңіз. Файлды серверде сақтау үшін клиент файлының атын пайдаланғыңыз келсе, оны :func:`~werkzeug.utils.secure_filename` функция арқылы жіберіңіз ::
 
     from werkzeug.utils import secure_filename
 
@@ -495,20 +444,14 @@ Werkzeug provides for you::
             file.save(f"/var/www/uploads/{secure_filename(file.filename)}")
         ...
 
-For some better examples, see :doc:`patterns/fileuploads`.
+Толығырақ мысалдар алу үшін қараңыз: :doc:`patterns/fileuploads`.
 
-Cookies
+Кукилар
 ```````
 
-To access cookies you can use the :attr:`~flask.Request.cookies`
-attribute.  To set cookies you can use the
-:attr:`~flask.Response.set_cookie` method of response objects.  The
-:attr:`~flask.Request.cookies` attribute of request objects is a
-dictionary with all the cookies the client transmits.  If you want to use
-sessions, do not use the cookies directly but instead use the
-:ref:`sessions` in Flask that add some security on top of cookies for you.
+Cookie файлдарына қол жеткізу үшін :attr:`~flask.Response.set_cookie` атрибутын қолданыз. Cookies орнату үшін :attr:`~flask.Response.set_cookie`жауап обьектердін әдістерін қолдануға болады. Клиент жіберетін барлық cookie файлдармен сөздік жауап обьектердін :attr:`~flask.Request.cookies` атрибут. Егер сіз сеанстарды пайдаланғыңыз келсе, cookie файлдарын тікелей пайдаланбаңыз, оның орнына Flask ішіндегі :ref:`sessions` пайдаланыңыз, бұл сізге cookie файлдарының үстіне қауіпсіздік қосады.
 
-Reading cookies::
+Кукиларды оқу::
 
     from flask import request
 
@@ -518,7 +461,7 @@ Reading cookies::
         # use cookies.get(key) instead of cookies[key] to not get a
         # KeyError if the cookie is missing.
 
-Storing cookies::
+Кукиларды сақтау::
 
     from flask import make_response
 
