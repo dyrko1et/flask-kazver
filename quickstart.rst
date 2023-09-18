@@ -471,23 +471,16 @@ Cookie файлдарына қол жеткізу үшін :attr:`~flask.Respons
         resp.set_cookie('username', 'the username')
         return resp
 
-Note that cookies are set on response objects.  Since you normally
-just return strings from the view functions Flask will convert them into
-response objects for you.  If you explicitly want to do that you can use
-the :meth:`~flask.make_response` function and then modify it.
+Куки файлдары жауап нысандарға орнатылғанын ескеріңіз. Сіз әдетте шолу функцияларынан жолдарды қайтаратындықтан, Flask оларды сіз үшін жауап нысандарына түрлендіреді. Егер сіз мұны нақты жасағыңыз келсе, Сіз :meth:`~flask.make_response` , тек содан кейін оны өзгерте аласыз.
 
-Sometimes you might want to set a cookie at a point where the response
-object does not exist yet.  This is possible by utilizing the
-:doc:`patterns/deferredcallbacks` pattern.
+Кейде сізге cookie файлын жауап нысаны әлі жоқ жерде орнату қажет болуы мүмкін. Бұл :doc:`patterns/deferredcallbacks` арқылы мүмкін болады .
 
-For this also see :ref:`about-responses`.
+Бұл туралы  :ref:`about-responses` да қараңыз.
 
-Redirects and Errors
+Қайта бағыттау және қателер
 --------------------
 
-To redirect a user to another endpoint, use the :func:`~flask.redirect`
-function; to abort a request early with an error code, use the
-:func:`~flask.abort` function::
+Пайдаланушыны басқа соңғы нүктеге бағыттау үшін :func:`~flask.redirect` функциясын қолдаңыз; қате кодымен сұрауды мерзімінен бұрын тоқтату үшін :func:`~flask.abort` функциясын қолданыңыз::
 
     from flask import abort, redirect, url_for
 
@@ -500,13 +493,9 @@ function; to abort a request early with an error code, use the
         abort(401)
         this_is_never_executed()
 
-This is a rather pointless example because a user will be redirected from
-the index to a page they cannot access (401 means access denied) but it
-shows how that works.
+Бұл өте мағынасыз мысал, өйткені пайдаланушы индекстен кіре алмайтын бетке бағытталады (401 кіруге тыйым салынғанын білдіреді), бірақ ол оның қалай жұмыс істейтінін көрсетеді.
 
-By default a black and white error page is shown for each error code.  If
-you want to customize the error page, you can use the
-:meth:`~flask.Flask.errorhandler` decorator::
+Әдепкі бойынша, әрбір қате коды үшін ақ-қара қате беті көрсетіледі. Қате бетін реттегіңіз келсе :meth:`~flask.Flask.errorhandler`  декораторды пайдалана аласыз::
 
     from flask import render_template
 
@@ -514,46 +503,27 @@ you want to customize the error page, you can use the
     def page_not_found(error):
         return render_template('page_not_found.html'), 404
 
-Note the ``404`` after the :func:`~flask.render_template` call.  This
-tells Flask that the status code of that page should be 404 which means
-not found.  By default 200 is assumed which translates to: all went well.
+:func:`~flask.render_template` қоңырау шалғаннан кейін ``404``- ке назар аударыңыз. Бұл flask-ке бұл беттің статусы коды 404 болуы керек, бұл "табылмады" дегенді білдіреді. Әдепкі бойынша, 200 мәні келесідей аударылады: бәрі жақсы өтті.
 
-See :doc:`errorhandling` for more details.
+Қосымша ақпарат алу үшін :doc:`error handling` қараңыз.
 
 .. _about-responses:
 
-About Responses
+Жауаптар туралы
 ---------------
 
-The return value from a view function is automatically converted into
-a response object for you. If the return value is a string it's
-converted into a response object with the string as response body, a
-``200 OK`` status code and a :mimetype:`text/html` mimetype. If the
-return value is a dict or list, :func:`jsonify` is called to produce a
-response. The logic that Flask applies to converting return values into
-response objects is as follows:
+Көру функциясынан қайтарылған мән сіз үшін автоматты түрде жауап нысанына түрлендіріледі. Егер қайтару мәні жол болса, ол жауап беру объектісіне жауап денесі ретінде жол, ````200 OK`` кодтың статусы және mime-type :mime type:`text/html`  түрінде түрлендіріледі. Егер қайтару мәні dict немесе list болса, жауап алу үшін :func:`jsonify`деп аталады. Flask қайтарылған мәндерді жауап нысандарына түрлендіру үшін қолданатын Логика келесідей:
 
-1.  If a response object of the correct type is returned it's directly
-    returned from the view.
-2.  If it's a string, a response object is created with that data and
-    the default parameters.
-3.  If it's an iterator or generator returning strings or bytes, it is
-    treated as a streaming response.
-4.  If it's a dict or list, a response object is created using
-    :func:`~flask.json.jsonify`.
-5.  If a tuple is returned the items in the tuple can provide extra
-    information. Such tuples have to be in the form
-    ``(response, status)``, ``(response, headers)``, or
-    ``(response, status, headers)``. The ``status`` value will override
-    the status code and ``headers`` can be a list or dictionary of
-    additional header values.
-6.  If none of that works, Flask will assume the return value is a
-    valid WSGI application and convert that into a response object.
+1. Егер жауап нысаны дұрыс түрге қайтарылса, ол тікелей көріністен қайтарылады.
+2. Егер бұл жол болса, response нысаны осы деректермен және әдепкі параметрлермен жасалады.
+3. Егер бұл жолдарды немесе байттарды қайтаратын итератор немесе генератор болса, ол ағындық жауап ретінде өңделеді.
+4. Егер бұл сөздік немесе тізім болса, жауап нысаны :func:`~flask.json.jsonify`.
+5. Егер кортеж қайтарылса, кортеждегі элементтер қосымша ақпарат бере алады. Мұндай кортеждер ``(response, status)``,``(response, headers)`` немесе``(response, status, headers)`` түрінде болуы керек. ``status`` мәні күй кодын жоққа шығарады, ал ``headers`` қосымша тақырып мәндерінің тізімі немесе сөздігі болуы мүмкін.
+6. Егер бұлардың ешқайсысы жұмыс істемесе, Flask қайтару мәні жарамды WSGI қолданбасы деп есептейді және оны жауап нысанына түрлендіреді.
 
-If you want to get hold of the resulting response object inside the view
-you can use the :func:`~flask.make_response` function.
+Егер сіз көрініс ішіндегі алынған жауап нысанына қол жеткізгіңіз келсе, келесі функцияны қолдана аласыз :func:`~flask.make_response`.
 
-Imagine you have a view like this::
+Сізде осындай көрініс бар деп елестетіп көріңіз::
 
     from flask import render_template
 
@@ -561,9 +531,7 @@ Imagine you have a view like this::
     def not_found(error):
         return render_template('error.html'), 404
 
-You just need to wrap the return expression with
-:func:`~flask.make_response` and get the response object to modify it, then
-return it::
+Қайтарылған өрнекті :func:`~flask.make_response` және оны өзгерту үшін response нысанын алыңыз, содан кейін оны қайтарыңыз::
 
     from flask import make_response
 
@@ -574,12 +542,10 @@ return it::
         return resp
 
 
-APIs with JSON
+API-лер мен JSON
 ``````````````
 
-A common response format when writing an API is JSON. It's easy to get
-started writing such an API with Flask. If you return a ``dict`` or
-``list`` from a view, it will be converted to a JSON response.
+API жазу кезінде жалпы жауап форматы-JSON. Flask көмегімен осындай API жазуды бастау оңай. Егер сіз көріністен ``dict``немесе ``list``қайтарсаңыз, олар JSON-ға жауап ретінде түрлендіріледі.
 
 .. code-block:: python
 
@@ -597,31 +563,19 @@ started writing such an API with Flask. If you return a ``dict`` or
         users = get_all_users()
         return [user.to_json() for user in users]
 
-This is a shortcut to passing the data to the
-:func:`~flask.json.jsonify` function, which will serialize any supported
-JSON data type. That means that all the data in the dict or list must be
-JSON serializable.
+Бұл кез келген қолдау көрсетілетін JSON деректер түрін сериялайтын  :func:`~flask.json.jsonify` функциясына деректерді жіберуге арналған төте жол. Бұл сөздік немесе тізімдегі барлық деректер JSON форматында сериялануы керек дегенді білдіреді.
 
-For complex types such as database models, you'll want to use a
-serialization library to convert the data to valid JSON types first.
-There are many serialization libraries and Flask API extensions
-maintained by the community that support more complex applications.
+Мәліметтер базасының модельдері сияқты күрделі типтер үшін алдымен деректерді жарамды JSON түрлеріне түрлендіру үшін сериялау кітапханасын пайдалану қажет болады. Қауымдастық күрделі қосымшаларды қолдайтын көптеген сериялау кітапханалары мен flask API кеңейтімдерін қолдайды.
 
 
 .. _sessions:
 
-Sessions
+Сессиялар
 --------
 
-In addition to the request object there is also a second object called
-:class:`~flask.session` which allows you to store information specific to a
-user from one request to the next.  This is implemented on top of cookies
-for you and signs the cookies cryptographically.  What this means is that
-the user could look at the contents of your cookie but not modify it,
-unless they know the secret key used for signing.
+Сұрау нысанынан басқа, пайдаланушыға қатысты ақпаратты бір сұраудан екіншісіне сақтауға мүмкіндік беретін :class:`~flask.session`  деп аталатын екінші нысан да бар. Бұл сіз үшін cookie файлдарының үстінде жүзеге асырылады және cookie файлдарына криптографиялық түрде қол қояды. Бұл дегеніміз, пайдаланушы сіздің cookie файлыңыздың мазмұнын көре алады, бірақ қол қою үшін пайдаланылатын құпия кілтті білмесе, оны өзгертпейді.
 
-In order to use sessions you have to set a secret key.  Here is how
-sessions work::
+Сеанстарды пайдалану үшін құпия кілтті орнату керек.  Сеанстар осылай жұмыс істейді::
 
     from flask import session
 
@@ -652,99 +606,67 @@ sessions work::
         session.pop('username', None)
         return redirect(url_for('index'))
 
-.. admonition:: How to generate good secret keys
+.. admonition::Жақсы құпия кілттерді қалай жасауға болады
 
-    A secret key should be as random as possible. Your operating system has
-    ways to generate pretty random data based on a cryptographic random
-    generator. Use the following command to quickly generate a value for
-    :attr:`Flask.secret_key` (or :data:`SECRET_KEY`)::
+Құпия кілт мүмкіндігінше кездейсоқ болуы керек. Сіздің амалдық жүйеңізде кездейсоқ сандардың криптографиялық генераторына негізделген кездейсоқ деректерді жасаудың тәсілдері бар. 
+  :attr:`Flask.secret_key` (or :data:`SECRET_KEY`)
+мәнін жылдам жасау үшін келесі пәрменді пайдаланыңыз::
 
         $ python -c 'import secrets; print(secrets.token_hex())'
         '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
 
-A note on cookie-based sessions: Flask will take the values you put into the
-session object and serialize them into a cookie.  If you are finding some
-values do not persist across requests, cookies are indeed enabled, and you are
-not getting a clear error message, check the size of the cookie in your page
-responses compared to the size supported by web browsers.
+Cookie файлдарына негізделген сеанстар туралы ескерту: Flask сессия нысанына енгізген мәндерді қабылдайды және оларды cookie файлына сериялайды.  Егер сіз кейбір мәндер сұрауларда сақталмайтынын байқасаңыз, cookie файлдары шынымен қосылады және сіз нақты қате туралы хабарлама алмасаңыз, веб-шолғыштар қолдайтын өлшеммен салыстырғанда парағыңыздың жауаптарындағы cookie файлының өлшемін тексеріңіз.
 
-Besides the default client-side based sessions, if you want to handle
-sessions on the server-side instead, there are several
-Flask extensions that support this.
+Әдепкі клиент жағындағы сеанстардан басқа, оның орнына сервер жағындағы сеанстарды өңдегіңіз келсе, оны қолдайтын бірнеше Flask кеңейтімдері бар.
 
-Message Flashing
+Жыпылықтайтын хабарлама
 ----------------
 
-Good applications and user interfaces are all about feedback.  If the user
-does not get enough feedback they will probably end up hating the
-application.  Flask provides a really simple way to give feedback to a
-user with the flashing system.  The flashing system basically makes it
-possible to record a message at the end of a request and access it on the next
-(and only the next) request.  This is usually combined with a layout
-template to expose the message.
+Жақсы қолданбалар мен пайдаланушы интерфейстері кері байланысқа байланысты. Егер пайдаланушы жеткілікті кері байланыс алмаса, олар қолданбаны жек көруі мүмкін. Flask жыпылықтау жүйесі арқылы пайдаланушыға кері байланыс берудің өте қарапайым әдісін ұсынады. Жыпылықтау жүйесі негізінен сұраудың соңында хабарламаны жазуға және келесі сұрауда (және тек келесі сұрауда) оған қол жеткізуге мүмкіндік береді. Бұл әдетте хабарламаны көрсету үшін орналасу үлгісімен біріктіріледі.
 
-To flash a message use the :func:`~flask.flash` method, to get hold of the
-messages you can use :func:`~flask.get_flashed_messages` which is also
-available in the templates. See :doc:`patterns/flashing` for a full
-example.
+Хабарлама жіберу үшін келесі әдісті қолданыңыз  :func:`~flask.flash` хабарламаларға қол жеткізу үшін Сіз шаблондарда қол жетімді  :func:`~flask.get_flashed_messages`қолдана аласыз. Қараңыз: doc: `үлгілер/жыпылықтау` толық мысал үшін.
 
-Logging
+Тіркеу
 -------
 
 .. versionadded:: 0.3
 
-Sometimes you might be in a situation where you deal with data that
-should be correct, but actually is not.  For example you may have
-some client-side code that sends an HTTP request to the server
-but it's obviously malformed.  This might be caused by a user tampering
-with the data, or the client code failing.  Most of the time it's okay
-to reply with ``400 Bad Request`` in that situation, but sometimes
-that won't do and the code has to continue working.
+Кейде Сіз дұрыс болуы керек деректермен айналысатын жағдайға тап болуыңыз мүмкін, бірақ олай емес. Мысалы, сізде серверге HTTP сұрауын жіберетін клиенттік код болуы мүмкін, бірақ ол дұрыс қалыптаспаған сияқты. Бұл Пайдаланушының деректерге араласуынан немесе клиенттік кодтың бұзылуынан туындауы мүмкін. Көп жағдайда мұндай жағдайда ``400 Bad Request``жауап беруге болады, бірақ кейде олай болмайды және код жұмыс істей беруі керек.
 
-You may still want to log that something fishy happened.  This is where
-loggers come in handy.  As of Flask 0.3 a logger is preconfigured for you
-to use.
+Сіз әлі де күдікті нәрсе болғанын тіркегіңіз келуі мүмкін.  Мұнда ағаш кесушілер пайдалы болады.  Flask 0.3 нұсқасынан бастап Тіркеуші сіздің пайдалануыңыз үшін алдын ала конфигурацияланған.
 
-Here are some example log calls::
+Журнал қоңырауларының кейбір мысалдары::
 
     app.logger.debug('A value for debugging')
     app.logger.warning('A warning occurred (%d apples)', 42)
     app.logger.error('An error occurred')
 
-The attached :attr:`~flask.Flask.logger` is a standard logging
-:class:`~logging.Logger`, so head over to the official :mod:`logging`
-docs for more information.
+Қосымша :attr:`~flask.Flask.logger`- стандартты журнал :class:`~logging.Logger`, сондықтан қосымша ақпарат алу үшін ресми құжаттарға жүгініңіз :mod:`logging`.
 
-See :doc:`errorhandling`.
+:doc:`errorhandling` Қараңыз.
 
 
-Hooking in WSGI Middleware
+WSGI аралық бағдарламалық жасақтамасына қосылу
 --------------------------
 
-To add WSGI middleware to your Flask application, wrap the application's
-``wsgi_app`` attribute. For example, to apply Werkzeug's
-:class:`~werkzeug.middleware.proxy_fix.ProxyFix` middleware for running
-behind Nginx:
+Flask қолданбасына WSGI аралық бағдарламалық құралын қосу үшін ``wsgi_app`` қолданбасының атрибутын ораңыз. Мысалы, Nginx жұмыс істеу үшін Werkzeugs
+ ::class:`~werkzeug.middleware.proxy_fix. Proxy Fix` аралық бағдарламалық жасақтамасын қолдану:
 
 .. code-block:: python
 
     from werkzeug.middleware.proxy_fix import ProxyFix
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
-Wrapping ``app.wsgi_app`` instead of ``app`` means that ``app`` still
-points at your Flask application, not at the middleware, so you can
-continue to use and configure ``app`` directly.
+``app`` орау орнына  ``app.wsgi_app``,  ' app ' әлі де Flask қосымшасын көрсетедідегенді білдіреді, аралық бағдарламалық жасақтама емес. Сондықтан сіз `app` бағдарламасын тікелей қолдана және теңшей аласыз.
 
-Using Flask Extensions
+Flask қосымшаларды орнату
 ----------------------
 
-Extensions are packages that help you accomplish common tasks. For
-example, Flask-SQLAlchemy provides SQLAlchemy support that makes it simple
-and easy to use with Flask.
+Қосымшалар - бұл жалпы тапсырмаларды орындауға көмектесетін пакеттер. Мысалы, Flask-SQLAlchemy - SQLAlchemy қолдауын ұсынады, бұл оны Flask көмегімен пайдалануды жеңілдетеді.
 
-For more on Flask extensions, see :doc:`extensions`.
+Flask қосамшаларды туралы көбірек ақпаратты мына жерден қараңыз  :doc:`extensions`.
 
-Deploying to a Web Server
+Веб-серверде орналастыру
 -------------------------
 
-Ready to deploy your new Flask app? See :doc:`deploying/index`.
+Жаңа flask қолданбасын орналастыруға дайынсыз ба? :doc:`deploying/index` қараңыз.
