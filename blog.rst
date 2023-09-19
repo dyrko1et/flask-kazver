@@ -43,25 +43,12 @@
 
 Аутентификация схемасынан айырмашылығы, блог схемасында ``url_prefix``жоқ. Осылайша, ``index`` көрінісі  ``/`` ішінде болады, ``/create`` көрінісі  ``/create`` және т.б. Блог, Flask-тің негізгі функциясы,сондықтан блог индексі негізгі индекс болады.
 
-However, the endpoint for the ``index`` view defined below will be
-``blog.index``. Some of the authentication views referred to a plain
-``index`` endpoint. :meth:`app.add_url_rule() <Flask.add_url_rule>`
-associates the endpoint name ``'index'`` with the ``/`` url so that
-``url_for('index')`` or ``url_for('blog.index')`` will both work,
-generating the same ``/`` URL either way.
+бірдей URL мекенжайын жасау ``/``кез келген жағдайда. Басқа қолданбада сіз ``url_prefix`` блог схемасын тағайындап, ``hello`` көрінісіне ұқсас қосымшалар фабрикасындағы ``index``жеке көрінісін анықтай аласыз. Содан кейін ``index`` және ``blog.index`` соңғы нүктелері мен URL мекенжайлары әр түрлі болар еді.
 
-In another application you might give the blog blueprint a
-``url_prefix`` and define a separate ``index`` view in the application
-factory, similar to the ``hello`` view. Then the ``index`` and
-``blog.index`` endpoints and URLs would be different.
-
-
-Index
+Индекс
 -----
 
-The index will show all of the posts, most recent first. A ``JOIN`` is
-used so that the author information from the ``user`` table is
-available in the result.
+Индексте барлық жазбалар көрсетіледі, алдымен ең бірінші. ``JOIN``нәтижесінде ``user`` кестесінен автор туралы ақпарат алу үшін қолданылады.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -108,26 +95,17 @@ available in the result.
       {% endfor %}
     {% endblock %}
 
-When a user is logged in, the ``header`` block adds a link to the
-``create`` view. When the user is the author of a post, they'll see an
-"Edit" link to the ``update`` view for that post. ``loop.last`` is a
-special variable available inside `Jinja for loops`_. It's used to
-display a line after each post except the last one, to visually separate
-them.
+Пайдаланушы кірген кезде ``header`` блогы ``create``көрінісіне сілтеме қосады. Пайдаланушы жарияланымның авторы болған кезде, ол "Edit" сілтемесін ``update``  сол жарияланым үшін. ``loop.last`` - бұл `Jinja for loops`_ішінде қол жетімді арнайы айнымалы. Ол әр хабарламадан кейін жолды көрсету үшін қолданылады, соңғысынан басқа, оларды көзбен бөлу үшін.
 
 .. _Jinja for loops: https://jinja.palletsprojects.com/templates/#for
 
 
-Create
+Жасау
 ------
 
-The ``create`` view works the same as the auth ``register`` view. Either
-the form is displayed, or the posted data is validated and the post is
-added to the database or an error is shown.
+``create`` көрінісі авторизация үшін тіркеу ``register`` сияқты жұмыс істейді. Пішін көрсетіледі немесе жарияланған деректер тексеріледі және жазба дерекқорға қосылады немесе қате туралы хабар көрсетіледі.
 
-The ``login_required`` decorator you wrote earlier is used on the blog
-views. A user must be logged in to visit these views, otherwise they
-will be redirected to the login page.
+Сіз бұрын жазған ``login_required`` декоры блог көріністерінде қолданылады. Пайдаланушы осы көріністерге кіру үшін жүйеге кіруі керек, әйтпесе ол кіру бетіне қайта бағытталады.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -177,13 +155,10 @@ will be redirected to the login page.
     {% endblock %}
 
 
-Update
+Жаңарту
 ------
 
-Both the ``update`` and ``delete`` views will need to fetch a ``post``
-by ``id`` and check if the author matches the logged in user. To avoid
-duplicating code, you can write a function to get the ``post`` and call
-it from each view.
+ ``update``көріністерінде де, ``delete``көріністерінде ``id``  идентификатормен ``post`` алу және автордың тіркелген пайдаланушымен сәйкес келетіндігін тексеру қажет болады. . Кодтың қайталануын болдырмау үшін Сіз ``post``алу үшін функция жазып, оны әр көріністен шақыра аласыз.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -204,16 +179,9 @@ it from each view.
 
         return post
 
-:func:`abort` will raise a special exception that returns an HTTP status
-code. It takes an optional message to show with the error, otherwise a
-default message is used. ``404`` means "Not Found", and ``403`` means
-"Forbidden". (``401`` means "Unauthorized", but you redirect to the
-login page instead of returning that status.)
+:func:`abort` - HTTP күй кодын қайтаратын арнайы ерекшелікті шақырады. Қате туралы хабарды көрсету үшін қосымша хабарлама қажет, әйтпесе әдепкі хабарлама қолданылады.``404``"табылмады" дегенді білдіреді, ал``403``тыйым салынған"дегенді білдіреді. (``401`` "рұқсат етілмеген" дегенді білдіреді, бірақ сіз бұл күйді қайтарудың орнына кіру бетіне бағыттайсыз.)
 
-The ``check_author`` argument is defined so that the function can be
-used to get a ``post`` without checking the author. This would be useful
-if you wrote a view to show an individual post on a page, where the user
-doesn't matter because they're not modifying the post.
+``Check_author`` аргументі автордың тексеруінсіз ``post`` алу үшін функцияны қолдануға болатындай етіп анықталған. Егер сіз жеке жазбаны пайдаланушы маңызды емес бетте көрсету үшін көрініс жазсаңыз, бұл пайдалы болар еді, себебі ол жазбаны өзгертпейді.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -245,21 +213,10 @@ doesn't matter because they're not modifying the post.
 
         return render_template('blog/update.html', post=post)
 
-Unlike the views you've written so far, the ``update`` function takes
-an argument, ``id``. That corresponds to the ``<int:id>`` in the route.
-A real URL will look like ``/1/update``. Flask will capture the ``1``,
-ensure it's an :class:`int`, and pass it as the ``id`` argument. If you
-don't specify ``int:`` and instead do ``<id>``, it will be a string.
-To generate a URL to the update page, :func:`url_for` needs to be passed
-the ``id`` so it knows what to fill in:
-``url_for('blog.update', id=post['id'])``. This is also in the
-``index.html`` file above.
+Осы уақытқа дейін жазған көріністерден айырмашылығы, ``update`` функциясы ``id``аргументін қабылдайды. Бұл маршрутта ``<int:id>`` сәйкес келеді. Нақты URL мекенжайы ``/1/update`` сияқты болады. Flask  ``1``түзетеді, оның :class:`int` екеніне көз жеткізіңіз және оны ``id``аргументі ретінде жіберіңіз. Егер сіз  ``int:``көрсетпесеңіз және оның орнына ``<id>`` жасасаңыз, бұл жол болады.
+Жаңарту бетінің URL мекенжайын жасау үшін :func:`url_for`не толтыру керектігін білу үшін ``id`` жіберілуі керек: ``url_for('blog.update', id=post['id'])``. Бұл ``index.html`` де бар жоғарыдағы файлы.
 
-The ``create`` and ``update`` views look very similar. The main
-difference is that the ``update`` view uses a ``post`` object and an
-``UPDATE`` query instead of an ``INSERT``. With some clever refactoring,
-you could use one view and template for both actions, but for the
-tutorial it's clearer to keep them separate.
+``create``және ``update`` көріністері өте ұқсас. Негізгі айырмашылық - '``update`` көрінісі ``INSERT`` орнына ``post`` нысанын және ``UPDATE`` сұрауын қолданады. Кейбір ақылды рефакторинг арқылы сіз екі әрекет үшін де бір көрініс пен үлгіні пайдалана аласыз, бірақ Нұсқаулық үшін оларды бөлек ұстау түсінікті.
 
 .. code-block:: html+jinja
     :caption: ``flaskr/templates/blog/update.html``
@@ -285,27 +242,15 @@ tutorial it's clearer to keep them separate.
       </form>
     {% endblock %}
 
-This template has two forms. The first posts the edited data to the
-current page (``/<id>/update``). The other form contains only a button
-and specifies an ``action`` attribute that posts to the delete view
-instead. The button uses some JavaScript to show a confirmation dialog
-before submitting.
+Бұл үлгінің екі формасы бар. Біріншісі өңделген деректерді ағымдағы бетте жариялайды (``/<id>/update``). Басқа формада тек батырма бар және оның орнына жою көрінісіне жіберілетін ``action`` атрибутын көрсетеді. Түйме жібермес бұрын растау тілқатысу терезесін көрсету үшін кейбір JavaScript пайдаланады.
 
-The pattern ``{{ request.form['title'] or post['title'] }}`` is used to
-choose what data appears in the form. When the form hasn't been
-submitted, the original ``post`` data appears, but if invalid form data
-was posted you want to display that so the user can fix the error, so
-``request.form`` is used instead. :data:`request` is another variable
-that's automatically available in templates.
+Үлгі ``{{ request.form['title'] or post['title'] }}``  пішінде қандай деректер көрсетілетінін таңдау үшін қолданылады. Пішін жіберілмеген кезде``post`` бастапқы деректері көрсетіледі, бірақ егер дұрыс емес пішін деректері жарияланған болса, пайдаланушы қатені түзете алатындай етіп оны көрсеткіңіз келеді, сондықтан оның орнына ``request.form``қолданылады. :data:`request`  - бұл шаблондарда автоматты түрде қол жетімді тағы бір айнымалы.
 
 
-Delete
+Жою
 ------
 
-The delete view doesn't have its own template, the delete button is part
-of ``update.html`` and posts to the ``/<id>/delete`` URL. Since there
-is no template, it will only handle the ``POST`` method and then redirect
-to the ``index`` view.
+Жою көрінісінің жеке үлгісі жоқ, жою  түймесі ``update.html``бөлігі болып табылады және URL мекенжайына хабарламалар жібереді ``/<id>/delete``. Үлгі болмағандықтан, ол тек ``POST``әдісін өңдейді, содан кейін `index`көрінісіне бағыттайды.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -319,8 +264,6 @@ to the ``index`` view.
         db.commit()
         return redirect(url_for('blog.index'))
 
-Congratulations, you've now finished writing your application! Take some
-time to try out everything in the browser. However, there's still more
-to do before the project is complete.
+Құттықтаймыз, сіз өз өтінішіңізді жазуды аяқтадыңыз! Барлығын шолғышта сынап көруге біраз уақыт бөліңіз. Дегенмен, жоба аяқталғанға дейін әлі көп нәрсе істеу керек.
 
-Continue to :doc:`install`.
+Келесіге өтіңіз :doc:`install`.
