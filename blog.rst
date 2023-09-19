@@ -1,21 +1,16 @@
 .. currentmodule:: flask
 
-Blog Blueprint
+Блог жүргізу схемасы
 ==============
 
-You'll use the same techniques you learned about when writing the
-authentication blueprint to write the blog blueprint. The blog should
-list all posts, allow logged in users to create posts, and allow the
-author of a post to edit or delete it.
+Блог схемасын жасау үшін аутентификация схемасын жазу кезінде білген әдістерді қолданасыз. Блогта барлық жазбалар тізімделуі керек, авторизацияланған пайдаланушыларға жазбалар жасауға және жазба авторына оны өңдеуге немесе жоюға рұқсат етілуі керек.
 
-As you implement each view, keep the development server running. As you
-save your changes, try going to the URL in your browser and testing them
-out.
+Әрбір көрініс іске асырылған кезде әзірлеу серверінің жұмысын қолдаңыз. Өзгерістерді сақтаған кезде, браузердегі URL мекенжайына өтіп, оларды тексеріп көріңіз.
 
-The Blueprint
+Схемалар
 -------------
 
-Define the blueprint and register it in the application factory.
+Схеманы анықтаңыз және оны қолданбалар зауытына тіркеңіз.
 
 .. code-block:: python
     :caption: ``flaskr/blog.py``
@@ -30,9 +25,7 @@ Define the blueprint and register it in the application factory.
 
     bp = Blueprint('blog', __name__)
 
-Import and register the blueprint from the factory using
-:meth:`app.register_blueprint() <Flask.register_blueprint>`. Place the
-new code at the end of the factory function before returning the app.
+Өндірушіден сызбаны импорттаңыз және тіркеңіз :meth:`app.register_blueprint()<Flask.register_blueprint>`. Қолданбаны қайтармас бұрын зауыттық мүмкіндіктің соңына жаңа кодты қойыңыз.
 
 .. code-block:: python
     :caption: ``flaskr/__init__.py``
@@ -48,10 +41,7 @@ new code at the end of the factory function before returning the app.
         return app
 
 
-Unlike the auth blueprint, the blog blueprint does not have a
-``url_prefix``. So the ``index`` view will be at ``/``, the ``create``
-view at ``/create``, and so on. The blog is the main feature of Flaskr,
-so it makes sense that the blog index will be the main index.
+Аутентификация схемасынан айырмашылығы, блог схемасында ``url_prefix``жоқ. Осылайша, ``index`` көрінісі  ``/`` ішінде болады, ``/create`` көрінісі  ``/create`` және т.б. Блог, Flask-тің негізгі функциясы,сондықтан блог индексі негізгі индекс болады.
 
 However, the endpoint for the ``index`` view defined below will be
 ``blog.index``. Some of the authentication views referred to a plain
