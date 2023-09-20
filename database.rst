@@ -1,37 +1,24 @@
 .. currentmodule:: flask
 
-Define and Access the Database
+Деректер базасын анықтау және оған қол жеткізу
 ==============================
 
-The application will use a `SQLite`_ database to store users and posts.
-Python comes with built-in support for SQLite in the :mod:`sqlite3`
-module.
+Қолданба пайдаланушылар мен жазбаларды сақтау үшін `SQLite`_ дерекқорын пайдаланады. Python :mod:`sqlite3`модулінде кірістірілген SQLite қолдауымен бірге келеді.
 
-SQLite is convenient because it doesn't require setting up a separate
-database server and is built-in to Python. However, if concurrent
-requests try to write to the database at the same time, they will slow
-down as each write happens sequentially. Small applications won't notice
-this. Once you become big, you may want to switch to a different
-database.
+SQLite ыңғайлы, себебі ол жеке дерекқор серверін конфигурациялауды қажет етпейді және Python-ға ендірілген. Алайда, егер параллель сұраулар дерекқорға бір уақытта жазуға тырысса, олар баяулайды, өйткені әр жазба дәйекті түрде жүреді. Шағын қолданбалар мұны байқамайды. Үлкен болғаннан кейін сіз басқа дерекқорға ауысқыңыз келуі мүмкін.
 
-The tutorial doesn't go into detail about SQL. If you are not familiar
-with it, the SQLite docs describe the `language`_.
+Нұсқаулықта SQL туралы егжей-тегжейлі айтылмайды. Егер сіз онымен таныс болмасаңыз, SQLite құжаттары `language`_ сипаттайды.
 
 .. _SQLite: https://sqlite.org/about.html
 .. _language: https://sqlite.org/lang.html
 
 
-Connect to the Database
+Дерекқорға қосылыңыз
 -----------------------
 
-The first thing to do when working with a SQLite database (and most
-other Python database libraries) is to create a connection to it. Any
-queries and operations are performed using the connection, which is
-closed after the work is finished.
+SQLite дерекқорымен (және басқа Python дерекқор кітапханаларының көпшілігімен) жұмыс істеу кезінде бірінші кезекте оған қосылым жасау керек. Кез келген сұраулар мен операциялар жұмыс аяқталғаннан кейін жабылатын қосылым арқылы орындалады.
 
-In web applications this connection is typically tied to the request. It
-is created at some point when handling a request, and closed before the
-response is sent.
+Веб-қосымшаларда бұл байланыс әдетте сұранысқа байланысты болады. Ол сұрауды өңдеу кезінде бір сәтте жасалады және жауап жібермес бұрын жабылады.
 
 .. code-block:: python
     :caption: ``flaskr/db.py``
@@ -59,38 +46,21 @@ response is sent.
         if db is not None:
             db.close()
 
-:data:`g` is a special object that is unique for each request. It is
-used to store data that might be accessed by multiple functions during
-the request. The connection is stored and reused instead of creating a
-new connection if ``get_db`` is called a second time in the same
-request.
+:data:`g` - бұл әр сұранысқа ғана тән арнайы объект. Ол сұрау кезінде бірнеше мүмкіндіктерге қол жеткізуге болатын деректерді сақтау үшін қолданылады. Егер ``get_db`` сол сұрауда екінші рет шақырылса, қосылым сақталады және жаңа қосылым жасаудың орнына қайта пайдаланылады.
 
-:data:`current_app` is another special object that points to the Flask
-application handling the request. Since you used an application factory,
-there is no application object when writing the rest of your code.
-``get_db`` will be called when the application has been created and is
-handling a request, so :data:`current_app` can be used.
+:data:`current_app` - бұл сұранысты өңдейтін flask қосымшасын көрсететін тағы бір арнайы объект. Қолданбалар фабрикасын пайдаланғандықтан, кодтың қалған бөлігін жазу кезінде қолданба нысаны жоқ. ``get_db`` қолданба жасалып, сұранысты өңдеген кезде шақырылады, сондықтан :data:`current_app` қолдануға болады.
 
-:func:`sqlite3.connect` establishes a connection to the file pointed at
-by the ``DATABASE`` configuration key. This file doesn't have to exist
-yet, and won't until you initialize the database later.
+:func:`sqlite3.connect`-  ``DATABASE`` конфигурация кілті көрсетілген файлмен байланыс орнатады. Бұл файл әлі болмауы керек және кейінірек дерекқорды инициализацияламайынша болмайды.
 
-:class:`sqlite3.Row` tells the connection to return rows that behave
-like dicts. This allows accessing the columns by name.
+:class:`sqlite3.Row` қосылымды сөздік сияқты әрекет ететін жолдарды қайтаруға нұсқайды. Бұл бағандарға аты бойынша қол жеткізуге мүмкіндік береді.
 
-``close_db`` checks if a connection was created by checking if ``g.db``
-was set. If the connection exists, it is closed. Further down you will
-tell your application about the ``close_db`` function in the application
-factory so that it is called after each request.
+``close_db`` байланыстың жасалғанын тексереді, ``g.db``орнатылғанын тексереді. Егер Байланыс болса, ол жабылады. Әрі қарай, сіз өзіңіздің қосымшаңызға қосымшалар фабрикасындағы ``close_db`` функциясы туралы айтып бересіз, сонда ол әр сұраудан кейін шақырылады.
 
 
-Create the Tables
+Кестелер жасау
 -----------------
 
-In SQLite, data is stored in *tables* and *columns*. These need to be
-created before you can store and retrieve data. Flaskr will store users
-in the ``user`` table, and posts in the ``post`` table. Create a file
-with the SQL commands needed to create empty tables:
+SQLite-де деректер *tables*  және *columns* сақталады. Олар деректерді сақтауға және алуға дейін жасалуы керек. Flaskr пайдаланушыларды ``user``  кестесінде, ал жазбаларды ``post`` кестесінде сақтайды. Бос кестелер жасау үшін қажет SQL командалары бар файл жасаңыз:
 
 .. code-block:: sql
     :caption: ``flaskr/schema.sql``
@@ -113,8 +83,7 @@ with the SQL commands needed to create empty tables:
       FOREIGN KEY (author_id) REFERENCES user (id)
     );
 
-Add the Python functions that will run these SQL commands to the
-``db.py`` file:
+Осы SQL командаларын іске қосатын Python мүмкіндіктерін қосыңыз ``db.py``  файл:
 
 .. code-block:: python
     :caption: ``flaskr/db.py``
@@ -132,25 +101,15 @@ Add the Python functions that will run these SQL commands to the
         init_db()
         click.echo('Initialized the database.')
 
-:meth:`open_resource() <Flask.open_resource>` opens a file relative to
-the ``flaskr`` package, which is useful since you won't necessarily know
-where that location is when deploying the application later. ``get_db``
-returns a database connection, which is used to execute the commands
-read from the file.
+:meth:`open_resource() <Flask.open_resource>`  - ``flask``бумасына қатысты файлды ашады, бұл пайдалы, өйткені қолданбаны кейінірек орналастырған кезде бұл орынның қай жерде екенін білудің қажеті жоқ. ``get_db`` файлдан оқылған командаларды орындау үшін пайдаланылатын мәліметтер базасына қосылымды қайтарады.
 
-:func:`click.command` defines a command line command called ``init-db``
-that calls the ``init_db`` function and shows a success message to the
-user. You can read :doc:`/cli` to learn more about writing commands.
+:func:`click.command` - ``init-db`` функциясын шақыратын және пайдаланушыға сәтті аяқталғаны туралы хабарлама көрсететін ``init-db``деп аталатын пәрмен жолын анықтайды. Пәрмендерді жазу туралы көбірек білу үшін :doc:`/cli` оқи аласыз.
 
 
-Register with the Application
+Қолданбаға тіркеліңіз
 -----------------------------
 
-The ``close_db`` and ``init_db_command`` functions need to be registered
-with the application instance; otherwise, they won't be used by the
-application. However, since you're using a factory function, that
-instance isn't available when writing the functions. Instead, write a
-function that takes an application and does the registration.
+``close_db``  және ``init_db_command``  функциялары қолданба данасында тіркелуі керек; әйтпесе оларды қолданба пайдаланбайды. Алайда, сіз зауыттық функцияны қолданғандықтан, бұл функция функцияларды жазу кезінде қол жетімді емес. Оның орнына қосымшаны қабылдайтын және тіркеуді орындайтын функцияны жазыңыз.
 
 .. code-block:: python
     :caption: ``flaskr/db.py``
@@ -159,15 +118,11 @@ function that takes an application and does the registration.
         app.teardown_appcontext(close_db)
         app.cli.add_command(init_db_command)
 
-:meth:`app.teardown_appcontext() <Flask.teardown_appcontext>` tells
-Flask to call that function when cleaning up after returning the
-response.
+:meth:`app.teardown_appcontext() <Flask.teardown_appcontext>` жауап қайтарылғаннан кейін тазалау кезінде Flask функциясын шақыруға нұсқау береді.
 
-:meth:`app.cli.add_command() <click.Group.add_command>` adds a new
-command that can be called with the ``flask`` command.
+:meth:`app.cli.add_command() <click.Group.add_command>`  flask пәрменімен шақыруға болатын жаңа пәрменді қосады.
 
-Import and call this function from the factory. Place the new code at
-the end of the factory function before returning the app.
+Бұл мүмкіндікті Өндіруші зауыттан импорттаңыз және шақырыңыз. Қолданбаны қайтармас бұрын зауыттық мүмкіндіктің соңына жаңа кодты қойыңыз.
 
 .. code-block:: python
     :caption: ``flaskr/__init__.py``
@@ -182,28 +137,20 @@ the end of the factory function before returning the app.
         return app
 
 
-Initialize the Database File
+Дерекқор файлын инициализациялаңыз
 ----------------------------
-
-Now that ``init-db`` has been registered with the app, it can be called
-using the ``flask`` command, similar to the ``run`` command from the
-previous page.
 
 .. note::
 
-    If you're still running the server from the previous page, you can
-    either stop the server, or run this command in a new terminal. If
-    you use a new terminal, remember to change to your project directory
-    and activate the env as described in :doc:`/installation`.
+   Егер сіз әлі де алдыңғы беттен серверді іске қосып жатсаңыз, серверді тоқтатуға немесе бұл пәрменді жаңа терминалда іске қосуға болады. Егер сіз жаңа терминалды қолдансаңыз, жоба каталогына өтіп, сипатталғандай env-ді іске қосыңыз :doc:`/installation`.
 
-Run the ``init-db`` command:
+``init-db``пәрмені қолдаңыз:
 
 .. code-block:: none
 
     $ flask --app flaskr init-db
     Initialized the database.
 
-There will now be a ``flaskr.sqlite`` file in the ``instance`` folder in
-your project.
+Енді сіздің жобаңыздың``instance`` қалтасында``flask.sqlite`` файлы болады.
 
-Continue to :doc:`views`.
+:doc:`views`- ге өтіңіз.
