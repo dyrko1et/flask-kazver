@@ -17,48 +17,32 @@ Tutorial
     deploy
     next
 
-This tutorial will walk you through creating a basic blog application
-called Flaskr. Users will be able to register, log in, create posts,
-and edit or delete their own posts. You will be able to package and
-install the application on other computers.
+Бұл нұсқаулықта сіз Flask деп аталатын негізгі блог жүргізу қосымшасын құрумен танысасыз. Пайдаланушылар тіркеле алады, жүйеге кіре алады, хабарламалар жасай алады және өз жазбаларын өңдей немесе жоя алады. Сіз қосымшаны басқа компьютерлерге жинап, орната аласыз.
 
 .. image:: flaskr_index.png
     :align: center
     :class: screenshot
     :alt: screenshot of index page
 
-It's assumed that you're already familiar with Python. The `official
-tutorial`_ in the Python docs is a great way to learn or review first.
+Сіз Python-мен бұрыннан таныссыз деп қабылдаймыз. Python құжаттамасындағы `official tutorial`_ алдымен оны зерттеудің немесе қараудың тамаша тәсілі.
 
-.. _official tutorial: https://docs.python.org/3/tutorial/
+.. _ресми оқулық: https://docs.python.org/3/tutorial/
 
-While it's designed to give a good starting point, the tutorial doesn't
-cover all of Flask's features. Check out the :doc:`/quickstart` for an
-overview of what Flask can do, then dive into the docs to find out more.
-The tutorial only uses what's provided by Flask and Python. In another
-project, you might decide to use :doc:`/extensions` or other libraries
-to make some tasks simpler.
+Бұл нұсқаулық жақсы бастау нүктесін арналған болса да, ол Flasks-тің барлық мүмкіндіктерін қамтымайды. Flask не істей алатындығы туралы шолу үшін :doc:`/quickstart` қараңыз , содан кейін көбірек білу үшін құжаттарға сүңгіңіз.
+Нұсқаулық тек Flask және Python ұсынған нәрсені пайдаланады. Басқа жобада кейбір тапсырмаларды жеңілдету үшін :doc:`/extensions` немесе басқа кітапханаларды пайдалануды шеше аласыз.
 
 .. image:: flaskr_login.png
     :align: center
     :class: screenshot
     :alt: screenshot of login page
 
-Flask is flexible. It doesn't require you to use any particular project
-or code layout. However, when first starting, it's helpful to use a more
-structured approach. This means that the tutorial will require a bit of
-boilerplate up front, but it's done to avoid many common pitfalls that
-new developers encounter, and it creates a project that's easy to expand
-on. Once you become more comfortable with Flask, you can step out of
-this structure and take full advantage of Flask's flexibility.
+Flask өте икемді. Бұл сізден нақты жобаны немесе кодтың орналасуын пайдалануды талап етпейді. Дегенмен, бірінші рет іске қосқан кезде құрылымдалған тәсілді қолдану пайдалы. Бұл нұсқаулық аздап шаблондық дайындықты қажет етеді дегенді білдіреді, бірақ бұл жаңа әзірлеушілердің жиі кездесетін қателіктерін болдырмау үшін жасалады және бұл оңай кеңейтілетін жобаны жасайды. Flask-ке ыңғайлы болғаннан кейін, сіз бұл дизайннан бас тарта аласыз және колбалардың икемділігін толық пайдалана аласыз.
 
 .. image:: flaskr_edit.png
     :align: center
     :class: screenshot
     :alt: screenshot of edit page
 
-:gh:`The tutorial project is available as an example in the Flask
-repository <examples/tutorial>`, if you want to compare your project
-with the final product as you follow the tutorial.
+:gh:` <examples/tutorial> - оқу жобасы flask репозиторийінде мысал ретінде қол жетімді`, егер сіз өз жобаңызды нұсқаулыққа сәйкес соңғы өніммен салыстырғыңыз келсе.
 
-Continue to :doc:`layout`.
+ :doc:`layout` - ге өтіңіз.
