@@ -1,32 +1,18 @@
 .. currentmodule:: flask
 
-Application Setup
+Қолданбаны орнату
 =================
 
-A Flask application is an instance of the :class:`Flask` class.
-Everything about the application, such as configuration and URLs, will
-be registered with this class.
+Flask қолданбасы :class:`Flask` сыныбының данасы болып табылады. Конфигурация және URL мекенжайлары сияқты қолданбаға қатысты барлық нәрсе осы сыныпта тіркеледі.
 
-The most straightforward way to create a Flask application is to create
-a global :class:`Flask` instance directly at the top of your code, like
-how the "Hello, World!" example did on the previous page. While this is
-simple and useful in some cases, it can cause some tricky issues as the
-project grows.
+Flask қосымшасын құрудың ең оңай жолы- global :class:`Flask` данасын тікелей кодтың жоғарғы жағында жасау, мысалы, "Hello, World!" алдыңғы бетте. Бұл кейбір жағдайларда қарапайым және пайдалы болғанымен, жоба өскен сайын кейбір күрделі мәселелерді тудыруы мүмкін.
 
-Instead of creating a :class:`Flask` instance globally, you will create
-it inside a function. This function is known as the *application
-factory*. Any configuration, registration, and other setup the
-application needs will happen inside the function, then the application
-will be returned.
+:class:`Flask` ғаламдық дананы құрудың орнына, сіз оны функцияның ішінде жасайсыз. Бұл функция *application factory* деп аталады. Қолданбаға қажет кез келген конфигурация, тіркеу және басқа параметрлер функция ішінде орындалады, содан кейін қолданба қайтарылады.
 
-
-The Application Factory
+Қолданбалар фабрикасы
 -----------------------
 
-It's time to start coding! Create the ``flaskr`` directory and add the
-``__init__.py`` file. The ``__init__.py`` serves double duty: it will
-contain the application factory, and it tells Python that the ``flaskr``
-directory should be treated as a package.
+Кодтауды бастау уақыты келді!``flaskr`` каталогын жасаңыз және  ``__init__.py`` файл қосыңыз. Сол  ``__init__.py`` қос функцияны орындайды: онда қосымшалар фабрикасы болады және Python-ға ``flaskr``каталогы пакет ретінде қарастырылуы керек деп хабарлайды.
 
 .. code-block:: none
 
@@ -71,69 +57,33 @@ directory should be treated as a package.
 ``create_app`` is the application factory function. You'll add to it
 later in the tutorial, but it already does a lot.
 
-#.  ``app = Flask(__name__, instance_relative_config=True)`` creates the
-    :class:`Flask` instance.
+#.  ``app = Flask(__name__, instance_relative_config=True)`` :class`Flask` данасын жасайды.
 
-    *   ``__name__`` is the name of the current Python module. The app
-        needs to know where it's located to set up some paths, and
-        ``__name__`` is a convenient way to tell it that.
+    *   ``__name__`` бұл ағымдағы Python Модулінің атауы. Кейбір жолдарды конфигурациялау үшін қолданба қай жерде екенін білуі керек және ``__name__`` оған хабарлаудың ыңғайлы жолы болып табылады.
 
-    *   ``instance_relative_config=True`` tells the app that
-        configuration files are relative to the
-        :ref:`instance folder <instance-folders>`. The instance folder
-        is located outside the ``flaskr`` package and can hold local
-        data that shouldn't be committed to version control, such as
-        configuration secrets and the database file.
+    *   ``instance_relative_config=True`` қолданбаға конфигурация файлдары :ref:`instance folder <instance-folders>` - ға байланасты екенін айтады. Даналық қалтасы ``flask`` бумасының сыртында орналасқан және конфигурация құпиялары мен дерекқор файлы сияқты нұсқаны басқару жүйесіне жіберілмейтін жергілікті деректерді қамтамайды.
 
-#.  :meth:`app.config.from_mapping() <Config.from_mapping>` sets
-    some default configuration that the app will use:
+#.  :meth:`app.config.from_mapping() <Config.from_mapping>` қолданба пайдаланатын кейбір әдепкі конфигурацияны орнатады:
 
-    *   :data:`SECRET_KEY` is used by Flask and extensions to keep data
-        safe. It's set to ``'dev'`` to provide a convenient value
-        during development, but it should be overridden with a random
-        value when deploying.
+    *   :data:`SECRET_KEY`деректер қауіпсіздігін қамтамасыз ету үшін Flask және кеңейтімдер қолданылады. Ол әзірлеу кезінде ыңғайлы мәнді қамтамасыз ету үшін ``'dev'`` мәніне орнатылған, бірақ орналастырылған кезде оны кездейсоқ мәнмен ауыстыру керек.
 
-    *   ``DATABASE`` is the path where the SQLite database file will be
-        saved. It's under
-        :attr:`app.instance_path <Flask.instance_path>`, which is the
-        path that Flask has chosen for the instance folder. You'll learn
-        more about the database in the next section.
+    *   ``DATABASE`` бұл SQLite дерекқор файлы сақталатын жол. Даналық қалтасы үшін Flask таңдаған жол бұл :attr:`app.instance_path <Flask.instance_path>`астында, Дерекқор туралы толығырақ келесі бөлімде білесіз.
 
-#.  :meth:`app.config.from_pyfile() <Config.from_pyfile>` overrides
-    the default configuration with values taken from the ``config.py``
-    file in the instance folder if it exists. For example, when
-    deploying, this can be used to set a real ``SECRET_KEY``.
+#.  :meth:`app.config.from_pyfile() <Config.from_pyfile>` әдепкі конфигурацияны алынған мәндермен қайта анықтайды ``config.py``егер бар болса, даналық қалтасындағы файл. Мысалы, орналастыру кезінде оны нақты ``SECRET_KEY`` орнату үшін пайдалануға болады.
 
-    *   ``test_config`` can also be passed to the factory, and will be
-        used instead of the instance configuration. This is so the tests
-        you'll write later in the tutorial can be configured
-        independently of any development values you have configured.
+    *   ``test_config`` сонымен қатар зауытқа жіберілуі мүмкін және дананың конфигурациясының орнына қолданылады. Бұл нұсқаулықта кейінірек жазатын сынақтарды әзірлеу үшін Сіз орнатқан кез келген мәндерге қарамастан реттеуге болатындай етіп жасалады.
 
-#.  :func:`os.makedirs` ensures that
-    :attr:`app.instance_path <Flask.instance_path>` exists. Flask
-    doesn't create the instance folder automatically, but it needs to be
-    created because your project will create the SQLite database file
-    there.
+#.  :func:`os.makedirs` кепілдік береді :attr:`app.instance_path <Flask.instance_path>` бар. Flask даналық қалтаны автоматты түрде жасамайды, бірақ оны жасау керек, себебі сіздің жобаңыз сол жерде SQLite дерекқор файлын жасайды.
 
-#.  :meth:`@app.route() <Flask.route>` creates a simple route so you can
-    see the application working before getting into the rest of the
-    tutorial. It creates a connection between the URL ``/hello`` and a
-    function that returns a response, the string ``'Hello, World!'`` in
-    this case.
+#.  :meth:`@app.route() <Flask.route>` нұсқаулықтың қалған бөлігіне өтпес бұрын қолданбаның қалай жұмыс істейтінін көру үшін қарапайым маршрут жасайды. Бұл ``/hello`` URL мекенжайы мен жауапты қайтаратын функция арасында байланыс жасайды, бұл жағдайда ``Сәлем Әлем!``.
 
 
-Run The Application
+Қолданбаны Іске Қосыңыз
 -------------------
 
-Now you can run your application using the ``flask`` command. From the
-terminal, tell Flask where to find your application, then run it in
-debug mode. Remember, you should still be in the top-level
-``flask-tutorial`` directory, not the ``flaskr`` package.
+Енді қолданбаны ``flask`` пәрме арқылы іске қосуға болады. Терминалдан flask-ке қолданбаны қайдан табуға болатынын айтыңыз, содан кейін оны жөндеу режимінде іске қосыңыз. Есіңізде болсын, сіз әлі де``flaskr``  пакетінде емес, ``flask`` жоғарғы деңгейлі каталогында болуыңыз керек.
 
-Debug mode shows an interactive debugger whenever a page raises an
-exception, and restarts the server whenever you make changes to the
-code. You can leave it running and just reload the browser page as you
-follow the tutorial.
+Отладка режимі интерактивті отладчикті бетте ерекше жағдайлар шыққан кезде көрсетеді және кодқа өзгертулер енгізген сайын серверді қайта іске қосады. Сіз оны қосулы күйде қалдыра аласыз және нұсқауларды орындау арқылы шолғыш бетін қайта жүктей аласыз.
 
 .. code-block:: text
 
@@ -150,13 +100,8 @@ You'll see output similar to this:
      * Debugger is active!
      * Debugger PIN: nnn-nnn-nnn
 
-Visit http://127.0.0.1:5000/hello in a browser and you should see the
-"Hello, World!" message. Congratulations, you're now running your Flask
-web application!
+Сапар http://127.0.0.1:5000/hello браузерде және сіз "Hello, World!". Құттықтаймыз, енді сіз flask веб-қосымшасын іске қостыңыз!
 
-If another program is already using port 5000, you'll see
-``OSError: [Errno 98]`` or ``OSError: [WinError 10013]`` when the
-server tries to start. See :ref:`address-already-in-use` for how to
-handle that.
+Егер басқа бағдарлама 5000 портын қолданып жатса, сіз серверді іске қосқан кезде ``OSError: [Errno 98]`` немесе ``OSError: [WinError 10013]`` көресіз. :ref:`address-already-in-use` онымен қалай күресуге болады екенін қараңыз.
 
-Continue to :doc:`database`.
+:doc:`database` - ге өтіңіз.
