@@ -1,33 +1,24 @@
-Make the Project Installable
+Жобаны орната алатындай қылып боп стеңіз
 ============================
 
-Making your project installable means that you can build a *wheel* file and install that
-in another environment, just like you installed Flask in your project's environment.
-This makes deploying your project the same as installing any other library, so you're
-using all the standard Python tools to manage everything.
+Сіздің жобаңызды орнату мүмкіндігінің болуы Сіздің жобаңыздың ортасында Flask орнатқаныңыздай сияқты *wheel* файлын құрып, оны басқа ортаға орнатуға болатындығын білдіреді. Бұл сіздің жобаңызды орналастыруды кез-келген басқа кітапхананы орнатумен бірдей етеді, сондықтан сіз бәрін басқару үшін барлық стандартты Python құралдарын қолданасыз.
 
-Installing also comes with other benefits that might not be obvious from
-the tutorial or as a new Python user, including:
+Орнату сонымен қатар нұсқаулықтан немесе жаңа Python пайдаланушысынан көрінбейтін басқа артықшылықтарды береді, соның ішінде:
 
-*   Currently, Python and Flask understand how to use the ``flaskr``
-    package only because you're running from your project's directory.
-    Installing means you can import it no matter where you run from.
+*  Қазіргі уақытта Python және Flask "flask" бумасын қалай пайдалану керектігін түсінеді, себебі сіз өзіңіздің жобаңыздың каталогынан бастайсыз. Орнату оны қай жерден іске қоссаңыз да импорттай алатыныңызды білдіреді.
 
-*   You can manage your project's dependencies just like other packages
-    do, so ``pip install yourproject.whl`` installs them.
+*  Сіз өзіңіздің жобаңыздың тәуелділіктерін басқа пакеттер сияқты басқара аласыз, сондықтан ``pip install your project.whl`` оларды орнатыңыз.
 
-*   Test tools can isolate your test environment from your development
-    environment.
+*   Тестілеу құралдары сіздің сынақ ортаңызды даму ортасынан оқшаулай алады.
 
 .. note::
-    This is being introduced late in the tutorial, but in your future
-    projects you should always start with this.
+   Бұл нұсқаулықтың соңында енгізіледі, бірақ сіздің болашақ жобаларыңыз әрқашан осыдан бастауыңыз керек.
 
 
-Describe the Project
+Жобаны сипаттаңыз
 --------------------
 
-The ``pyproject.toml`` file describes your project and how to build it.
+Жоба ``pyproject.toml`` файлы сіздің жобаңызды және оны қалай жасау керектігін сипаттайды.
 
 .. code-block:: toml
     :caption: ``pyproject.toml``
@@ -44,27 +35,23 @@ The ``pyproject.toml`` file describes your project and how to build it.
     requires = ["flit_core<4"]
     build-backend = "flit_core.buildapi"
 
-See the official `Packaging tutorial <packaging tutorial_>`_ for more
-explanation of the files and options used.
+Пайдаланылған файлдар мен опциялар туралы толығырақ түсініктеме алу үшін ресми `Packaging tutorial <packaging tutorial_>`_ орау оқулығын қараңыз.
 
 .. _packaging tutorial: https://packaging.python.org/tutorials/packaging-projects/
 
 
-Install the Project
+Жобаны орнатыңыз
 -------------------
 
-Use ``pip`` to install your project in the virtual environment.
+Жобаңызды виртуалды ортаға орнату үшін ``pip`` пайдаланыңыз.
 
 .. code-block:: none
 
     $ pip install -e .
 
-This tells pip to find ``pyproject.toml`` in the current directory and install the
-project in *editable* or *development* mode. Editable mode means that as you make
-changes to your local code, you'll only need to re-install if you change the metadata
-about the project, such as its dependencies.
+Бұл пипке ``pyproject.toml`` ағымдағы каталогта табуды айтады  және жобаны *editable* немесе *development * режимінде орнатыңыз. Өңделетін режим жергілікті кодқа өзгертулер енгізген кезде, Егер сіз жоба туралы метадеректерді оның тәуелділіктері сияқты өзгертсеңіз ғана қайта орнатуды қажет ететіндігін білдіреді.
 
-You can observe that the project is now installed with ``pip list``.
+Жоба енді ``pip list``көмегімен орнатылғанын байқай аласыз.
 
 .. code-block:: none
 
@@ -81,9 +68,6 @@ You can observe that the project is now installed with ``pip list``.
     pip            9.0.3
     Werkzeug       0.14.1
 
-Nothing changes from how you've been running your project so far.
-``--app`` is still set to ``flaskr`` and ``flask run`` still runs
-the application, but you can call it from anywhere, not just the
-``flask-tutorial`` directory.
+Осы уақытқа дейін жобаңызды қалай басқарғаныңызбен салыстырғанда ештеңе өзгермейді. ``--app`` әлі де ``flask``мәніне ие және ``flask run``  қолданбаны әлі де орындайды, бірақ сіз оны тек ``flask-tutorial`` каталогынан емес, кез келген жерден шақыра аласыз.
 
-Continue to :doc:`tests`.
+:doc:`tests` - ке өтіңіз.
