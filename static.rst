@@ -64,4 +64,4 @@ CSS туралы қосымша ақпаратты `Mozilla's documentation <CSS
 
 .. _CSS: https://developer.mozilla.org/docs/Web/CSS
 
-Жалғасы :doc:`blog.rst`.
+Жалғасы :doc:`blog`.
