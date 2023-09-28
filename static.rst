@@ -59,7 +59,7 @@ http://127.0.0.1:5000/auth/login өтіңіз және төмендегі скр
     :class: screenshot
     :alt: screenshot of login page
 
-CSS туралы қосымша ақпаратты `Mozilla's documentation <CSS_>`_. Егер
+CSS туралы қосымша ақпарат - `Mozilla's documentation <CSS_>`_. Егер
 статикалық файлды өзгертсеңіз, браузер бетін жаңартыңыз. Өзгеріс болмаса, браузердің кэшін тазалап көріңіз.
 
 .. _CSS: https://developer.mozilla.org/docs/Web/CSS
